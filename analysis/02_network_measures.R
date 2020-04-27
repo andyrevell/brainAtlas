@@ -40,7 +40,7 @@ for (i in 1:6){
 }
 
 for (i in 1:6) {
-  fname = paste0("../figures/networkMeasures_", fnames[i])
+  fname = paste0("../figures/networkMeasures_", fnames[i], ".pdf")
   pdf(fname, width = 10, height = 10)
   print(plot_list[[i]])
   dev.off()
