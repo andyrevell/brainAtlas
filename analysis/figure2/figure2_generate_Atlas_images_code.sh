@@ -1,7 +1,7 @@
 #!/bind/bash
 
 ATLAS_DIRECTORY=/Users/andyrevell/Box/01_papers/paper001_brainAtlasChoiceSFC/figure2_data
-FIGURE_DIRECTORY=/Users/andyrevell/Documents/20_papers/paper001_brainAtlasChoiceSFC/figures/figure2
+FIGURE_DIRECTORY=/Users/andyrevell/Documents/01_writing/00_thesis_work/06_papers/paper001_brainAtlasChoiceSFC/figures/figure2
 #coordinates
 x=-10.71519
 y=-32.61282
