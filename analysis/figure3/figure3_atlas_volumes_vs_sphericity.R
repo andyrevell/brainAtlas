@@ -43,7 +43,7 @@ density_lim = c(0,20e-0)
 ylim = density_lim
 lim_sphericity = c(0.0,0.8)
 pdf(paste0(figure_directory, "figure3_atlas_standard_volumesVSsphericity.pdf"), width = 10, height = 7)
-title = "Neuroimaging Atlases:\n Volumes vs Sphericity"
+
 
 
 
@@ -91,12 +91,12 @@ mtext("Volume Distribution: Schaefer 1000", side = 3, outer = F, line = 0.2 , fo
 par(new = T)
 hist(example_data, xlim = c(0,5),breaks=12, xlab = "", ylab = "", axes=T, main = "",  bty='l', las =1)
 #title(main = "Volume Distribution",line = -1.7, font.lab = 2, cex.main = 2)
-mtext("Neuroimaging Atlases: Sizes and Shapes", side = 3, outer = T, line = -2 , font = 2, cex = 2)
+mtext("Survey of Neuroimaging Atlases: Sizes and Shapes", side = 3, outer = T, line = -2 , font = 2, cex = 2)
 
 par(xpd=NA)
 ltr_x = par("usr")[2]
 ltr_y = par("usr")[4]
-text(ltr_x - ltr_x*1.2 , ltr_y+ ltr_y*0.4  , labels = "A", cex = 2, font = 2 )
+text(ltr_x - ltr_x*1.16 , ltr_y+ ltr_y*0.45  , labels = "A", cex = 2, font = 2 )
 
 par(new = T)
 #plotting example SPHERICTY distribution - Schaefer1000:
@@ -117,7 +117,7 @@ hist(example_data, xlim = c(0,0.8),breaks=12, xlab = "", ylab = "", axes=T, main
 par(xpd=NA)
 ltr_x = par("usr")[2]
 ltr_y = par("usr")[4]
-text(ltr_x - ltr_x*1.2 , ltr_y+ ltr_y*0.4  , labels = "B", cex = 2, font = 2 )
+text(ltr_x - ltr_x*1.16 , ltr_y+ ltr_y*0.45  , labels = "B", cex = 2, font = 2 )
 
 mar =  c(0,0,0,0)
 mar_1 = 4
@@ -187,7 +187,7 @@ axis(side=2,at=seq( floor( lim_sphericity[1]*10 )/10, ceiling( lim_sphericity[2]
 par(xpd=NA)
 ltr_x = par("usr")[2]
 ltr_y = par("usr")[4]
-text(ltr_x - ltr_x*1.2 , ltr_y+ ltr_y*0.3  , labels = "C", cex = 2, font = 2 )
+text(ltr_x - ltr_x*1.16 , ltr_y+ ltr_y*0.24  , labels = "C", cex = 2, font = 2 )
 
 
 title(xlab = "Volume (log10 Voxels)", line = 2,font.lab = 1, cex.lab = 1.0)
@@ -215,12 +215,7 @@ legend(x = "bottomleft", legend = gsub("[.]", "=",  names(data_volumes))[index],
 #text(  xlim[1], ylim[2], "Small & \nSpherical", adj = c(0, 1)  , font = 2, cex = 1.2)
 #text(  xlim[2], ylim[1], "Large &      \nnon-spherical", adj = c(1, 0) , font = 2 , cex = 1.2)
 
-#arrows(xlim[1]+1.3, ylim[2]-0.19, xlim[1]+1, ylim[2]-0.1, length = 0.2, angle = 30,
-#       code = 2, col = par("fg"), lty = par("lty"),
-#       lwd = 2)
-#arrows(xlim[2]-1.3, ylim[1]+0.19, xlim[2]-1, ylim[1]+0.1, length = 0.2, angle = 30,
-#       code = 2, col = par("fg"), lty = par("lty"),
-#       lwd = 2)
+
 
 
 
@@ -309,7 +304,7 @@ axis(side=2,at=seq( floor( lim_sphericity[1]*10 )/10, ceiling( lim_sphericity[2]
 par(xpd=NA)
 ltr_x = par("usr")[2]
 ltr_y = par("usr")[4]
-text(ltr_x - ltr_x*1.2 , ltr_y+ ltr_y*0.3  , labels = "D", cex = 2, font = 2 )
+text(ltr_x - ltr_x*1.16 , ltr_y+ ltr_y*0.24  , labels = "D", cex = 2, font = 2 )
 
 
 title(xlab = "Volume (log10 Voxels)", line = 2,font.lab = 1, cex.lab = 1.0)
@@ -332,10 +327,21 @@ legend(x = "bottomleft", legend = gsub("[.]", "=",  names(data_volumes))[index],
 
 #legend(x = "bottomright", legend = "means", col = "black", bty = "n", cex= 1, pch = 23 , xpd = T, adj=0)
 
+text_x_1 =  xlim[1]+(xlim[2] - xlim[1])*0.1
+text_y_1 = ylim[2]- ylim[2]*0.1
+text_x_2 =  xlim[2]-xlim[2]*0.1
+text_y_2 = ylim[1] + (ylim[2]- ylim[1])*0.1
 
-text(  xlim[1], ylim[2], "Small & \nSpherical", adj = c(0, 1)  , font = 2, cex = 1.2)
-text(  xlim[2], ylim[1], "Large &      \nnon-spherical", adj = c(1, 0) , font = 2 , cex = 1.2)
+text(  text_x_1, text_y_1, " Small & \nSpherical", adj = c(0, 1)  , font = 2, cex = 1)
+text(  text_x_2, text_y_2, "Large &      \nnon-spherical", adj = c(1, 0) , font = 2 , cex = 1)
 
+
+arrows( text_x_1-0.05,  text_y_1+0.005, xlim[1], ylim[2], length = 0.1, angle = 30,
+       code = 2, col = par("fg"), lty = par("lty"),
+       lwd = 2)
+arrows(text_x_2+0.05, text_y_2-0.005, xlim[2], ylim[1], length = 0.1, angle = 30,
+       code = 2, col = par("fg"), lty = par("lty"),
+       lwd = 2)
 
 
 
