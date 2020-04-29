@@ -1,5 +1,5 @@
 data_directory = "/Users/andyrevell/Box/01_papers/paper001_brainAtlasChoiceSFC/figure3_data"
-figure_directory = "/Users/andyrevell/Documents/20_papers/paper001_brainAtlasChoiceSFC/figures/"
+figure_directory = "/Users/andyrevell/Documents/01_writing/00_thesis_work/06_papers/paper001_brainAtlasChoiceSFC/figures/figure3/"
 setwd(data_directory)
 library(ggplot2)
 library(ggpubr)
@@ -42,7 +42,7 @@ lim_vol = c(0,5)
 density_lim = c(0,20e-0)
 ylim = density_lim
 lim_sphericity = c(0.0,0.8)
-pdf(paste0(figure_directory, "figure3/figure3_atlas_standard_volumesVSsphericity.pdf"), width = 10, height = 7)
+pdf(paste0(figure_directory, "figure3_atlas_standard_volumesVSsphericity.pdf"), width = 10, height = 7)
 title = "Neuroimaging Atlases:\n Volumes vs Sphericity"
 
 
