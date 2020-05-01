@@ -9,7 +9,7 @@ library("cowplot")
 data_volumes = read.csv("01_atlas_volumes.csv", stringsAsFactors = F, header = T)
 data_sphericity = read.csv("02_atlas_sphericity.csv", stringsAsFactors = F, header = T)
 standard_major_atlas_index = c(1:15)
-random_atlas_index = c(16:18)
+random_atlas_index = c(16:23)
 
 data_volumes = log10(data_volumes)
 
@@ -61,7 +61,7 @@ pch = start:(start+ncol(data_volumes))
 
 color_standard = rainbow(length(standard_major_atlas_index), s = 0.8, v = 0.9, start = 0, alpha = 0.4)
 random_atlas_colors =  paste0(colorRampPalette(c("#0000ff", "#990099"))(4), "66")
-random_atlas_colors =  rainbow(length(random_atlas_index), s = 0.9, v = 0.9, start = 0.1, end = 0.75, alpha = 0.2)
+random_atlas_colors =  rainbow(length(random_atlas_index), s = 0.9, v = 0.9, start = 0.0, end = 0.85, alpha = 0.2)
 
 colors = c(color_standard, random_atlas_colors)
 par(new = F)
@@ -299,7 +299,7 @@ for (i in index){
 box()
 axis = par('usr')
 axis(side=1,lwd=1)
-axis(side=2,at=seq( floor( lim_sphericity[1]*10 )/10, ceiling( lim_sphericity[2]*10 )/10,0.1),lwd=1)
+axis(side=2,at=seq( floor( lim_sphericity[1]*10 )/10, ceiling( lim_sphericity[2]*10 )/10,0.1),lwd=1, las = 1)
 
 par(xpd=NA)
 ltr_x = par("usr")[2]
