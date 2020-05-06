@@ -52,34 +52,38 @@ for (a in 1:number_of_images){
 
 
 #create real_adjacency matrix from structure
-structure = readMat(paste0(data_directory,
-                           "sub-RID278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.
-                           aal_res-1x1x1.count.pass.connectivity.mat"))$connectivity
-structure = readMat(paste0(data_directory,
-                           "sub-RID278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.
-                           Schaefer2018_1000Parcels_17Networks_order_FSLMNI152_1mm.count.pass.connectivity.mat"))$connectivity
-structure = readMat(paste0(data_directory,
-                           "sub-RID278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.
-                           Schaefer2018_1000Parcels_17Networks_order_FSLMNI152_1mm.count.pass.connectivity.mat"))$connectivity
-structure = readMat(paste0(data_directory,
-                           "sub-RID278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.RA_N075_Perm0001.count.pass.connectivity.mat"))$connectivity
-structure = readMat(paste0(data_directory,
-                           "sub-RID278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.RA_N100_Perm0001.count.pass.connectivity.mat"))$connectivity
-structure = readMat(paste0(data_directory,
-                           "sub-RID278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.RA_N500_Perm0001.count.pass.connectivity.mat"))$connectivity
-structure = readMat(paste0(data_directory,
-                           "sub-RID278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.RA_N1000_Perm0001.count.pass.connectivity.mat"))$connectivity
+files_to_read = c(
+  "sub-RID278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.aal_res-1x1x1.count.pass.connectivity",
+  "sub-RID278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.Schaefer2018_1000Parcels_17Networks_order_FSLMNI152_1mm.count.pass.connectivity",
+  "sub-RID278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.Schaefer2018_400Parcels_17Networks_order_FSLMNI152_1mm.count.pass.connectivity",
+  "sub-RID278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.RA_N075_Perm0001.count.pass.connectivity",
+  "sub-RID278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.RA_N100_Perm0001.count.pass.connectivity",
+  "sub-RID278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.RA_N500_Perm0001.count.pass.connectivity",
+  "sub-RID278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.RA_N1000_Perm0001.count.pass.connectivity",
+  "sub-RID0508_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.RA_N030_Perm0001.count.pass.connectivity",
+  "sub-RID0508_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.DK_res-1x1x1.count.pass.connectivity",
+  "sub-RID0508_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.JHU_res-1x1x1.count.pass.connectivity"
+)
+for (i in 1:length(files_to_read)){
+  
+  structure = readMat(paste0(data_directory,files_to_read[i], ".mat" ))$connectivity
+  structure_image = structure
+  structure_image[structure_image == 0] = 1
+  structure_image = log10(structure_image) 
+  structure_image = structure_image/max(structure_image)
+  color = colorRampPalette(c( "#000000","#ccd9ff","#6699ff","#ffcccc","#ffcccc","#ff8080", "#4d0000", "#330000"))(1000)
+  color = colorRampPalette(c("#000000","#ffffff"))(2000)
+  color = colorRampPalette(c( "#ccd9ff","#6699ff","#ffcccc","#ffcccc","#ff8080", "#4d0000", "#330000"))(1000)
+  color = colorRampPalette(c( "#ffffff","#ccd9ff","#6699ff","#ffcccc","#ffcccc","#ff8080", "#4d0000", "#330000"))(1000)
+  
+  
+  pdf(paste0(figure_directory, files_to_read[i], ".pdf") , width = 5, height = 5)
+  pheatmap(structure_image, color = color, legend = F, border_color = NA, cluster_rows = T,cluster_cols = T, treeheight_row = 0, treeheight_col = 0)
+  dev.off()
+  
 
-
+}
 #normalize
-structure[structure == 0] = 1
-structure = log10(structure) 
-structure = structure/max(structure)
-color = colorRampPalette(c( "#ffffff","#ccd9ff","#6699ff","#ffcccc","#ffcccc","#ff8080", "#4d0000", "#330000"))(1000)
-pdf(paste0(figure_directory, "sturctural_network", ".pdf") , width = 5, height = 5)
-pheatmap(structure, color = color, legend = F, border_color = NA, cluster_rows = T,cluster_cols = T, treeheight_row = 0, treeheight_col = 0)
-dev.off()
-
 
 
 structure[log10(structure) == -Inf] = 0
