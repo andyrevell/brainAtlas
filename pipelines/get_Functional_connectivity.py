@@ -4,8 +4,8 @@ Created on Fri Feb 07 19:04:04 2020
 
 @author: asilv
 """
-
-from driverEchobase import broadband_conn, multiband_conn
+import echobase
+from echobase import broadband_conn, multiband_conn
 import numpy as np 
 import scipy.io as sio
 

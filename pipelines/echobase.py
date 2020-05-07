@@ -15,7 +15,19 @@ import os
 import inspect
 import scipy.signal as spsig
 from mtspec import mt_coherence, mtspec
+""""
+To install mtspec:
+https://krischer.github.io/mtspec/
+Linux:
+#apt-get install gfortran
+#pip install mtspec
 
+Mac OS:
+Need homebrew, then do:
+#brew install gcc
+#brew cask install gfortran
+#pip install mtspec
+"""
 
 def broadband_conn(data, fs, avgref=True):
     """
