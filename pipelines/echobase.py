@@ -1,12 +1,43 @@
-# -*- coding: utf-8 -*-
 """
+2020.05.06
+Ankit Khambhati, updated by Andy Revell
+
+Purpose:
 Function pipelines for filtering time-varying data
 
-Created by: Ankit Khambhati
+Logic of code:
+    1. Common average reference (common_avg_ref)
+    2. Fit an AR(1) model to the data and retains the residual as the pre-whitened data (ar_one)
+    3. bandpass, lowpass, highpass filtering (Notch at 60Hz, HPF at 5Hz, LPF at 115Hz, XCorr at 0.25) (elliptic)
+    4. Calculate cross-correlation similarity function for functional connectivity (xcorr_mag)
+    5. Calculate a band-specific functional network, coherence. (multitaper)
+
+Table of Contents:
+A. Main
+    1. broadband_conn
+    2. multiband_conn
+B. Supporting Code:
+    3. common_avg_ref
+    4. ar_one
+    5. elliptic
+    6. xcorr_mag
+    7. xcorr
+C. Utilities
+    8. check_path
+    9. make_path
+    10. check_path_overwrite
+    11. check_has_key
+    12. check_dims
+    13. check_type
+    14. check_function
+
+See individual function comments for inputs and outputs
 
 Change Log
 ----------
 2016/12/11 - Implemented broadband_conn
+2020/05/06 - updated code to work with python 3.7, numpy 1.18.4, scipy 1.4.1, mtspec 0.3.2. Added header to python code above
+    Added note how to install mtsepc below.
 """
 
 from __future__ import division
@@ -16,8 +47,12 @@ import inspect
 import scipy.signal as spsig
 from mtspec import mt_coherence, mtspec
 """"
+Note 2020.05.06
 To install mtspec:
-https://krischer.github.io/mtspec/
+See https://krischer.github.io/mtspec/ for more documentation
+1. Need to have gfortran installed on computer
+2. It is different for Linux and Mac
+
 Linux:
 #apt-get install gfortran
 #pip install mtspec
@@ -27,6 +62,10 @@ Need homebrew, then do:
 #brew install gcc
 #brew cask install gfortran
 #pip install mtspec
+"""
+
+"""
+A. Main
 """
 
 def broadband_conn(data, fs, avgref=True):
@@ -57,7 +96,7 @@ def broadband_conn(data, fs, avgref=True):
     """
 
     # Standard param checks
-    check_type(data, np.ndarray)
+    check_type(data,np.ndarray)
     check_dims(data, 2)
     check_type(fs, int)
 
@@ -154,115 +193,10 @@ def multiband_conn(data, fs, avgref=True):
     return adj_alphatheta, adj_beta, adj_lowgamma, adj_highgamma
 
 
+"""
+B. Supporting functions
+"""
 
-def check_dims(arr, nd):
-    '''
-    Check if numpy array has specific number of dimensions
-
-    Parameters
-    ----------
-        arr: numpy.ndarray
-            Input array for dimension checking
-
-        nd: int
-            Number of dimensions to check against
-    '''
-
-    if not arr.ndim == nd:
-        raise Exception('%r has %r dimensions. Must have %r' % (arr, arr.ndim, nd))
-
-
-def check_type(obj, typ):
-    '''
-    Check if obj is of correct type
-
-    Parameters
-    ----------
-        obj: any
-            Input object for type checking
-
-        typ: type
-            Reference object type (e.g. str, int)
-    '''
-
-    if not isinstance(obj, typ):
-        raise TypeError('%r is %r. Must be %r' % (obj, type(obj), typ))
-
-
-def check_function(obj):
-    '''
-    Check if obj is a function
-
-    Parameters
-    ----------
-        obj: any
-            Input object for type checking
-    '''
-
-    if not inspect.isfunction(obj):
-        raise TypeError('%r must be a function.' % (obj))
-
-
-def check_path(path):
-    '''
-    Check if path exists
-
-    Parameters
-    ----------
-        path: str
-            Check if valid path
-    '''
-
-    if not os.path.exists(path):
-        raise IOError('%s does not exists' % path)
-
-
-def make_path(path):
-    '''
-    Make new path if path does not exist
-
-    Parameters
-    ----------
-        path: str
-            Make the specified path
-    '''
-
-    if not os.path.exists(path):
-        os.makedirs(path)
-    else:
-        raise IOError('Path: %s, already exists' % path)
-
-
-def check_path_overwrite(path):
-    '''
-    Prevent overwriting existing path
-
-    Parameters
-    ----------
-        path: str
-            Check if path exists
-    '''
-
-    if os.path.exists(path):
-        raise IOError('%s cannot be overwritten' % path)
-
-
-def check_has_key(dictionary, key_ref):
-    '''
-    Check whether the dictionary has the specified key
-
-    Parameters
-    ----------
-        dictionary: dict
-            The dictionary to look through
-
-        key_ref: str
-            The key to look for
-    '''
-
-    if key_ref not in dictionary.keys():
-        raise KeyError('%r should contain the %r key' % (dictionary, key_ref))
-        
 def common_avg_ref(data):
     """
     The common_avg_ref function subtracts the common mode signal from the original
@@ -278,15 +212,13 @@ def common_avg_ref(data):
         data_reref: ndarray, shape (T, N)
             Referenced signal with common mode removed
     """
-
     # Standard param checks
     check_type(data, np.ndarray)
     check_dims(data, 2)
-
     # Remove common mode signal
     data_reref = (data.T - data.mean(axis=1)).T
-
     return data_reref
+
 
 def ar_one(data):
     """
@@ -303,23 +235,19 @@ def ar_one(data):
         data_white: ndarray, shape (T, N)
             Whitened signal with reduced autocorrelative structure
     """
-
     # Standard param checks
     check_type(data, np.ndarray)
     check_dims(data, 2)
-
     # Retrieve data attributes
     n_samp, n_chan = data.shape
-
     # Apply AR(1)
     data_white = np.zeros((n_samp-1, n_chan))
-    for i in xrange(n_chan):
-        win_x = np.vstack((data[:-1, i],
-                           np.ones(n_samp-1)))
-        w = np.linalg.lstsq(win_x.T, data[1:, i])[0]
+    for i in range(n_chan):
+        win_x = np.vstack((data[:-1, i], np.ones(n_samp-1)))
+        w = np.linalg.lstsq(win_x.T, data[1:, i], rcond=None)[0]
         data_white[:, i] = data[1:, i] - (data[:-1, i]*w[0] + w[1])
-
     return data_white
+
 
 def elliptic(data, fs, wpass, wstop, gpass, gstop):
     """
@@ -369,19 +297,29 @@ def elliptic(data, fs, wpass, wstop, gpass, gstop):
 
     # Design filter
     nyq = fs / 2.0
-    wpass_nyq = map(lambda f: f/nyq, wpass)
-    wstop_nyq = map(lambda f: f/nyq, wstop)
+
+    # new code. Works with scipy 1.4 (2020.05.06)
+    wpass_nyq = [iter*0 for iter in range(len(wpass))]
+    for m in range(0, len(wpass)):
+        wpass_nyq[m] = wpass[m] / nyq
+
+    # new code. Works with scipy 1.4 (2020.05.06)
+    wstop_nyq = [iter*0 for iter in range(len(wstop))]
+    for m in range(0, len(wstop)):
+        wstop_nyq[m] = wstop[m] / nyq
+
+    #wpass_nyq = map(lambda f: f/nyq, wpass) #old code. Works with scipy 0.18
+    #wstop_nyq = map(lambda f: f/nyq, wstop) #old code. Works with scipy 0.18
     coef_b, coef_a = spsig.iirdesign(wp=wpass_nyq,
                                      ws=wstop_nyq,
                                      gpass=gpass,
                                      gstop=gstop,
                                      analog=0, ftype='ellip',
                                      output='ba')
-
     # Perform filtering and dump into signal_packet
     data_filt = spsig.filtfilt(coef_b, coef_a, data, axis=0)
-
     return data_filt
+
 
 def xcorr_mag(data, fs, tau):
     """
@@ -506,6 +444,7 @@ def xcorr(data, fs, tau):
 
     return adj
 
+
 def multitaper(data, fs, time_band, n_taper, cf):
     """
     The multitaper function windows the signal using multiple Slepian taper
@@ -577,3 +516,108 @@ def multitaper(data, fs, time_band, n_taper, cf):
 
     return adj
 
+
+"""
+C. Utilities:
+"""
+
+def check_path(path):
+    '''
+    Check if path exists
+
+    Parameters
+    ----------
+        path: str
+            Check if valid path
+    '''
+    if not os.path.exists(path):
+        raise IOError('%s does not exists' % path)
+
+
+def make_path(path):
+    '''
+    Make new path if path does not exist
+
+    Parameters
+    ----------
+        path: str
+            Make the specified path
+    '''
+    if not os.path.exists(path):
+        os.makedirs(path)
+    else:
+        raise IOError('Path: %s, already exists' % path)
+
+
+def check_path_overwrite(path):
+    '''
+    Prevent overwriting existing path
+
+    Parameters
+    ----------
+        path: str
+            Check if path exists
+    '''
+    if os.path.exists(path):
+        raise IOError('%s cannot be overwritten' % path)
+
+
+def check_has_key(dictionary, key_ref):
+    '''
+    Check whether the dictionary has the specified key
+
+    Parameters
+    ----------
+        dictionary: dict
+            The dictionary to look through
+
+        key_ref: str
+            The key to look for
+    '''
+    if key_ref not in dictionary.keys():
+        raise KeyError('%r should contain the %r key' % (dictionary, key_ref))
+
+
+def check_dims(arr, nd):
+    '''
+    Check if numpy array has specific number of dimensions
+
+    Parameters
+    ----------
+        arr: numpy.ndarray
+            Input array for dimension checking
+
+        nd: int
+            Number of dimensions to check against
+    '''
+    if not arr.ndim == nd:
+        raise Exception('%r has %r dimensions. Must have %r' % (arr, arr.ndim, nd))
+
+
+def check_type(obj, typ):
+    '''
+    Check if obj is of correct type
+
+    Parameters
+    ----------
+        obj: any
+            Input object for type checking
+
+        typ: type
+            Reference object type (e.g. str, int)
+    '''
+    if not isinstance(obj, typ):
+        raise TypeError('%r is %r. Must be %r' % (obj, type(obj), typ))
+
+
+def check_function(obj):
+    '''
+    Check if obj is a function
+
+    Parameters
+    ----------
+        obj: any
+            Input object for type checking
+    '''
+    if not inspect.isfunction(obj):
+        raise TypeError('%r must be a function.' % (obj))
