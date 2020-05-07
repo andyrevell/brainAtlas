@@ -24,12 +24,13 @@ Output:
 Example usage:
 
 username = 'arevell'
-password = 'Zoro11'
+password = 'Zoro11!!'
 iEEG_filename='HUP138_phaseII'
 start_time_usec = 415723190000
 duration = 6000000
 removed_channels = ['EKG1', 'EKG2', 'CZ', 'C3', 'C4', 'F3', 'F7', 'FZ', 'F4', 'F8', 'LF04', 'RC03', 'RE07', 'RC05', 'RF01', 'RF03', 'RB07', 'RG03', 'RF11', 'RF12']
 outputfile = '/Users/andyrevell/Box/01_papers/sub-RID0278_HUP138_phaseII_415723190000_6000000.pickle'
+
 
 #Please use this output naming convention: sub-RIDXXXX_iEEGFILENAME_STARTTIME_DURATION.pickle
 #example: 'sub-RID0278_HUP138_phaseII_415723190000_6000000.pickle'
@@ -49,12 +50,9 @@ def get_iEEG_data(username, password, iEEG_filename, start_time_usec, duration, 
     ds = s.open_dataset(iEEG_filename)
     channels = list(range(len(ds.ch_labels)))
     data = ds.get_data(start_time_usec, duration, channels)
-
     df = pd.DataFrame(data, columns=ds.ch_labels)
     df = pd.DataFrame.drop(df, removed_channels, axis=1)
-
     fs = ds.get_time_series_details(ds.ch_labels[0]).sample_rate #get sample rate
-
     with open(outputfile, 'wb') as f: pickle.dump([df, fs], f)
 
 

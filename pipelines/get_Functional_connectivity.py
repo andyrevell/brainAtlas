@@ -42,7 +42,6 @@ Can also go to preferences --> Project structure to change source root
 """
 
 def getFuncConn(inputfile,outputfile):
-
     with open(inputfile, 'rb') as f: data, fs = pickle.load(f)#un-pickles files
     data_array = np.array(data)
     fs = float(fs)
@@ -65,7 +64,6 @@ def getFuncConn(inputfile,outputfile):
         highgamma[:,:,t] = adj_highgamma
         lowgamma[:,:,t] = adj_lowgamma
         print(t)
-
     np.savez(outputfile, broadband_CC=broadband_CC, alphatheta=alphatheta, beta=beta, lowgamma=lowgamma, highgamma=highgamma)
 
 
