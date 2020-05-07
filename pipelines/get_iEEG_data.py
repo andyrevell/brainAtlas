@@ -1,8 +1,8 @@
 """"
-2020.04.06
+2020.04.06. Python 3.7
 
 purpose:
-To get iEEG data from iEEG.org.
+To get iEEG data from iEEG.org. Note, you must download iEEG python package from GitHub - instructions are below
 Gets time series data and sampling frequency information. Specified electrodes are removed.
 Saves as a pickle format
 
@@ -51,8 +51,18 @@ def get_iEEG_data(username, password, iEEG_filename, start_time_usec, duration, 
     with open(file_name, 'wb') as f: pickle.dump([df, fs], f)
 
 
-#get_iEEG_data(username, password, iEEG_filename, start_time_usec, duration, removed_channels, outputfile)
-#get back files
-#with open('{0}.pkl'.format(outputfile), 'rb') as f:
-#    data, fs = pickle.load(f)
+""""
+Download and install iEEG python package - ieegpy
+GitHub repository: https://github.com/ieeg-portal/ieegpy
 
+If you downloaded this code from https://github.com/andyrevell/paper001.git then skip to step 2
+1. Download/clone ieepy. 
+    git clone https://github.com/ieeg-portal/ieegpy.git
+2. Change directory to the GitHub repo
+3. Install libraries to your python Path. If you are using a virtual environment (ex. conda), make sure you are in it
+    a. Run:
+        python setup.py build
+    b. Run: 
+        python setup.py install
+              
+""""
