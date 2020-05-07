@@ -31,7 +31,6 @@ duration = 6000000
 removed_channels = ['EKG1', 'EKG2', 'CZ', 'C3', 'C4', 'F3', 'F7', 'FZ', 'F4', 'F8', 'LF04', 'RC03', 'RE07', 'RC05', 'RF01', 'RF03', 'RB07', 'RG03', 'RF11', 'RF12']
 outputfile = '/Users/andyrevell/Box/01_papers/sub-RID0278_HUP138_phaseII_415723190000_6000000.pickle'
 
-
 #Please use this output naming convention: sub-RIDXXXX_iEEGFILENAME_STARTTIME_DURATION.pickle
 #example: 'sub-RID0278_HUP138_phaseII_415723190000_6000000.pickle'
 
