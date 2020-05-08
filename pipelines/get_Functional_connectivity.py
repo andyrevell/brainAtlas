@@ -34,6 +34,7 @@ example: 'sub-RID0278_HUP138_phaseII_415723190000_6000000'
 from echobase import broadband_conn, multiband_conn
 import numpy as np
 import pickle
+import pandas as pd
 """"
 Note on Pycharm users to import echobase:
 Right click the folder in which get_Functional_connectivity.py and echobase.py (MUST BE IN SAME DIRECTORY)
@@ -49,7 +50,7 @@ def getFuncConn(inputfile,outputfile):
     totalSecs = int(totalSecs)
     alphatheta = np.zeros((np.size(data_array,1),np.size(data_array,1),totalSecs))
     beta = np.zeros((np.size(data_array,1),np.size(data_array,1),totalSecs))
-    broadband_CC = np.zeros((np.size(data_array,1),np.size(data_array,1),totalSecs))
+    broadband = np.zeros((np.size(data_array,1),np.size(data_array,1),totalSecs))
     highgamma = np.zeros((np.size(data_array,1),np.size(data_array,1),totalSecs))
     lowgamma = np.zeros((np.size(data_array,1),np.size(data_array,1),totalSecs))
     for t in range(0,totalSecs):
@@ -60,11 +61,10 @@ def getFuncConn(inputfile,outputfile):
         adj_alphatheta, adj_beta, adj_lowgamma, adj_highgamma = multiband_conn(window,int(fs),avgref=True)
         alphatheta[:,:,t] = adj_alphatheta
         beta[:,:,t] = adj_beta
-        broadband_CC[:,:,t] = broad
+        broadband[:,:,t] = broad
         highgamma[:,:,t] = adj_highgamma
         lowgamma[:,:,t] = adj_lowgamma
         print(t)
-    np.savez(outputfile, broadband_CC=broadband_CC, alphatheta=alphatheta, beta=beta, lowgamma=lowgamma, highgamma=highgamma)
-
+    np.savez(outputfile, broadband=broadband, alphatheta=alphatheta, beta=beta, lowgamma=lowgamma, highgamma=highgamma)
 
 

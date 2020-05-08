@@ -24,7 +24,7 @@ Output:
 Example usage:
 
 username = 'arevell'
-password = ''
+password = 'Zoro11!!'
 iEEG_filename='HUP138_phaseII'
 start_time_usec = 415723190000
 duration = 6000000
