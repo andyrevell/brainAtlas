@@ -1,6 +1,6 @@
 """
 2020.05.08 Andy Revell
-Purpose: Record keeping of get_iEEG_data.py.
+Purpose: Get iEEG data entries in a text spreadsheet. See paper001/data/raw for spreadsheet example. Uses get_iEEG_data.py.
 
 Please remember to removed your password.
 Store password in file called password in pipelines (paper001/pipelines/password). .gitignore should ignore this files if you name it exactly
