@@ -44,13 +44,13 @@ from ieeg.auth import Session
 import pandas as pd
 import pickle
 
-def get_iEEG_data(username, password, iEEG_filename, start_time_usec, duration, removed_channels, outputfile):
+def get_iEEG_data(username, password, iEEG_filename, start_time_usec, duration, ignore_electrodes, outputfile):
     s = Session(username, password)
     ds = s.open_dataset(iEEG_filename)
     channels = list(range(len(ds.ch_labels)))
     data = ds.get_data(start_time_usec, duration, channels)
     df = pd.DataFrame(data, columns=ds.ch_labels)
-    df = pd.DataFrame.drop(df, removed_channels, axis=1)
+    df = pd.DataFrame.drop(df, ignore_electrodes, axis=1)
     fs = ds.get_time_series_details(ds.ch_labels[0]).sample_rate #get sample rate
     with open(outputfile, 'wb') as f: pickle.dump([df, fs], f)
 
