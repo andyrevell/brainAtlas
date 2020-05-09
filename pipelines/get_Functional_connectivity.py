@@ -70,7 +70,7 @@ def get_Functional_connectivity(inputfile,outputfile):
     highgamma = np.zeros((np.size(data_array,1),np.size(data_array,1),totalSecs))
     lowgamma = np.zeros((np.size(data_array,1),np.size(data_array,1),totalSecs))
     for t in range(0,totalSecs):
-        print("Calculating {0} out of {1} seconds".format(t+1, totalSecs))
+        printProgressBar(t, totalSecs, prefix = "Progress:", suffix = "done. Calculating {0} of {1} functional connectivity matrices".format(t+1,totalSecs ) )
         startInd = int(t*fs)
         endInd = int(((t+1)*fs) - 1) #calculating over 1 second windows
         window = data_array[startInd:endInd,:]
@@ -87,3 +87,29 @@ def get_Functional_connectivity(inputfile,outputfile):
     with open(outputfile, 'wb') as f: pickle.dump([broadband, alphatheta, beta, lowgamma, highgamma, electrode_row_and_column_names, order_of_matrices_in_pickle_file], f)
     #np.savez(outputfile, broadband=broadband, alphatheta=alphatheta, beta=beta, lowgamma=lowgamma, highgamma=highgamma)
     print("...done\n\n")
+
+
+
+
+
+# Progress bar function
+def printProgressBar(iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = "X", printEnd = "\r"):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    """
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filledLength = int(length * iteration // total)
+    bar = fill * filledLength + '-' * (length - filledLength)
+    print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end = printEnd)
+    # Print New Line on Complete
+    if iteration == total:
+        print()
