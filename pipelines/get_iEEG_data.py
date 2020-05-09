@@ -66,7 +66,7 @@ def get_iEEG_data(username, password, iEEG_filename, start_time_usec, stop_time_
     df = pd.DataFrame.drop(df, ignore_electrodes, axis=1)
     fs = ds.get_time_series_details(ds.ch_labels[0]).sample_rate #get sample rate
     with open(outputfile, 'wb') as f: pickle.dump([df, fs], f)
-    print("...done\n\n")
+    print("...done\n")
 
 
 """"

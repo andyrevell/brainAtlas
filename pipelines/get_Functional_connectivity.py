@@ -56,7 +56,7 @@ Can also go to preferences --> Project structure to change source root
 """
 
 def get_Functional_connectivity(inputfile,outputfile):
-    print("\n\nCalculating Functional Connectivity:")
+    print("\nCalculating Functional Connectivity:")
     print("inputfile: {0}".format(inputfile))
     print("outputfile: {0}".format(outputfile))
     with open(inputfile, 'rb') as f: data, fs = pickle.load(f)#un-pickles files

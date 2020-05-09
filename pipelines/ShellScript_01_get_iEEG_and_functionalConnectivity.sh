@@ -27,24 +27,31 @@
 #   Saves EEG timeseries in specified output directors
 
 #Example:
-#sh ShellScript_01_get_iEEG_and_functionalConnectivity.sh 'arevell' 'password'
+#./ShellScript_01_get_iEEG_and_functionalConnectivity.sh 'arevell' 'password'
 
 username=$1
 password=$2
 
-sub_ID="RID0278"
-iEEG_filename="HUP138_phaseII"
-start_time_usec=248432340000
-stop_time_usec=248525740000
-ignore_electrodes="EKG1,EKG2,CZ,C3,C4,F3,F7,FZ,F4,F8,LF04,RC03,RE07,RC05,RF01,RF03,RB07,RG03,RF11,RF12"
-
-BIDS_proccessed_directory="/gdrive/public/DATA/Human_Data/BIDS_processed"
-EEG_outputfile="${BIDS_proccessed_directory}/sub-${sub_ID}/eeg/sub-${sub_ID}_${iEEG_filename}_${start_time_usec}_${stop_time_usec}_EEG.pickle"
-functional_connectivity_inputfile=${EEG_outputfile}
-functional_connectivity_outputfile="${BIDS_proccessed_directory}/sub-${sub_ID}/connectivity_matrices/functional/sub-${sub_ID}_${iEEG_filename}_${start_time_usec}_${stop_time_usec}_functionalConnectivity.npz"
+start_times_array=(248432340000 248525740000)
+stop_times_array=(248434340000 248527740000)
 
 
-#Get iEEG data
-python3.6 -c 'import get_iEEG_data, sys; get_iEEG_data.get_iEEG_data(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6].split(","),sys.argv[7])' "$username" "$password" "$iEEG_filename" "$start_time_usec" "$stop_time_usec" "$ignore_electrodes" "$EEG_outputfile"
-#Get Functional Connectivity
-python3.6 -c 'import get_Functional_connectivity, sys; get_Functional_connectivity.get_Functional_connectivity(sys.argv[1], sys.argv[2])' "$functional_connectivity_inputfile" "$functional_connectivity_outputfile"
+for i in "${!start_times_array[@]}"; do
+  printf "\n\n\n${stop_times_array[i]}"
+  sub_ID="RID0278"
+  iEEG_filename="HUP138_phaseII"
+  ignore_electrodes="EKG1,EKG2,CZ,C3,C4,F3,F7,FZ,F4,F8,LF04,RC03,RE07,RC05,RF01,RF03,RB07,RG03,RF11,RF12"
+  start_time_usec=${start_times_array[i]}
+  stop_time_usec=${stop_times_array[i]}
+
+  BIDS_proccessed_directory="/gdrive/public/DATA/Human_Data/BIDS_processed"
+  EEG_outputfile="${BIDS_proccessed_directory}/sub-${sub_ID}/eeg/sub-${sub_ID}_${iEEG_filename}_${start_time_usec}_${stop_time_usec}_EEG.pickle"
+  functional_connectivity_inputfile=${EEG_outputfile}
+  functional_connectivity_outputfile="${BIDS_proccessed_directory}/sub-${sub_ID}/connectivity_matrices/functional/sub-${sub_ID}_${iEEG_filename}_${start_time_usec}_${stop_time_usec}_functionalConnectivity.pickle"
+
+  #Get iEEG data
+  python3.6 -c 'import get_iEEG_data, sys; get_iEEG_data.get_iEEG_data(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6].split(","),sys.argv[7])' "$username" "$password" "$iEEG_filename" "$start_time_usec" "$stop_time_usec" "$ignore_electrodes" "$EEG_outputfile"
+  #Get Functional Connectivity
+  python3.6 -c 'import get_Functional_connectivity, sys; get_Functional_connectivity.get_Functional_connectivity(sys.argv[1], sys.argv[2])' "$functional_connectivity_inputfile" "$functional_connectivity_outputfile"
+
+done
