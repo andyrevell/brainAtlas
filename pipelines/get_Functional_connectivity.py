@@ -70,7 +70,7 @@ def get_Functional_connectivity(inputfile,outputfile):
     highgamma = np.zeros((np.size(data_array,1),np.size(data_array,1),totalSecs))
     lowgamma = np.zeros((np.size(data_array,1),np.size(data_array,1),totalSecs))
     for t in range(0,totalSecs):
-        printProgressBar(t, totalSecs, prefix = "Progress:", suffix = "done. Calculating {0} of {1} functional connectivity matrices".format(t+1,totalSecs ) )
+        printProgressBar(t+1, totalSecs, prefix = "Progress:", suffix = "done. Calculating {0} of {1} functional connectivity matrices".format(t+1,totalSecs ) )
         startInd = int(t*fs)
         endInd = int(((t+1)*fs) - 1) #calculating over 1 second windows
         window = data_array[startInd:endInd,:]
