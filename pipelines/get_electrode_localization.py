@@ -1,5 +1,5 @@
 """
-Date
+Date 2020.05.10
 Andy Revell and Alex Silva
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Purpose:
@@ -16,10 +16,6 @@ Output:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Example:
 
-electrode_coordinates_mni_path='/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/electrode_localization/sub-RID0278_electrode_coordinates_mni.csv'
-atlas_path='/Users/andyrevell/mount/TOOLS/atlases_and_templates/atlases/aal_res-1x1x1.nii.gz'
-outputfile='/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/electrode_localization/electrode_localization_by_atlas/sub-RID0278_electrode_coordinates_mni_aal_res-1x1x1.csv'
-mni_template_path ='/Users/andyrevell/mount/TOOLS/atlases_and_templates/templates/MNI152_T1_1mm_brain.nii'
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Please use this naming convention
@@ -32,33 +28,56 @@ import pandas as pd
 import nibabel as nib
 
 
-def by_atlas(electrode_coordinates_mni_path,atlas_path,outputfile):
-    #getting imaging data
-    img = nib.load(atlas_path)
-    img_data = img.get_fdata() #getting actual image data array
-    aff = img.affine #get affine transformation in atals. Helps us convert real-world coordinates to voxel locations
+def by_atlas(electrode_coordinates_mni_path, atlas_path, mni_template_path, outputfile):
+    """
+    electrode_coordinates_mni_path='/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/electrode_localization/sub-RID0278_electrode_coordinates_mni.csv'
+    atlas_path='/Users/andyrevell/mount/TOOLS/atlases_and_templates/atlases/custom_atlases/random_atlases/whole_brain/RA_N1000/RA_N1000_Perm0001.nii.gz'
+    outputfile='/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/electrode_localization/electrode_localization_by_atlas/sub-RID0278_electrode_coordinates_mni_RA_N1000_Perm0001.csv'
+    mni_template_path ='/Users/andyrevell/mount/TOOLS/atlases_and_templates/templates/MNI152_T1_1mm_brain.nii.gz'
 
-    #getting electrode coordinates data
+    """
+    # getting imaging data
+    img = nib.load(atlas_path)
+    img_data = img.get_fdata()  # getting actual image data array
+    aff = img.affine  # get affine transformation in atals. Helps us convert real-world coordinates to voxel locations
+    print(aff)
+
+    # read in the MNI
+    aff_mni = nib.load(mni_template_path).affine
+    aff_mni[0, :] = -1 * aff_mni[0, :]
+    print(aff_mni)
+    # getting electrode coordinates data
     data = pd.read_csv(electrode_coordinates_mni_path, sep=",", header=None)
     data = data.iloc[:, range(0, 4)]
     column_names = ['electrode_name', "mni_x_coordinate", "mni_y_coordinate", "mni_z_coordinate", "region_number"]
-    data = data.rename(columns={data.columns[0]:column_names[0], data.columns[1]:column_names[1], data.columns[2]:column_names[2], data.columns[3]:column_names[3]      })
+    data = data.rename(
+        columns={data.columns[0]: column_names[0], data.columns[1]: column_names[1], data.columns[2]: column_names[2],
+                 data.columns[3]: column_names[3]})
 
-    coordinates = np.array((data.iloc[:,range(1,4)])) #get the MNI real-world coordinates of electrodes
-    #transform the real-world coordinates to the atals voxel space. Need to inverse the affine with np.linalg.inv(). To go from voxel to world, just input aff (dont inverse the affine)
-    coordinates_voxels = nib.affines.apply_affine(np.linalg.inv(aff), coordinates)
-    coordinates_voxels = np.round(coordinates_voxels) #round to nearest voxel
+    coordinates = np.array((data.iloc[:, range(1, 4)]))  # get the MNI real-world coordinates of electrodes
+    # transform the real-world coordinates to the atals voxel space. Need to inverse the affine with np.linalg.inv(). To go from voxel to world, just input aff (dont inverse the affine)
+    coordinates_voxels = nib.affines.apply_affine(np.linalg.inv(aff_mni), coordinates)
+    coordinates_voxels = np.round(coordinates_voxels)  # round to nearest voxel
+    print(coordinates_voxels)
     coordinates_voxels = coordinates_voxels.astype(int)
-    #find which region # is associated with each electrode (voxel) coodinate
-    img_ROI = img_data[coordinates_voxels[:,0], coordinates_voxels[:,1], coordinates_voxels[:,2] ]
+
+    img_ROI = img_data[coordinates_voxels[:, 0] - 1, coordinates_voxels[:, 1] - 1, coordinates_voxels[:, 2] - 1]
     img_ROI = np.reshape(img_ROI, [img_ROI.shape[0], 1])
     img_ROI = img_ROI.astype(int)
     img_ROI = pd.DataFrame(img_ROI)
-    data =  pd.concat([data,img_ROI ] , axis=1)
-    data = data.rename(columns={data.columns[4]:column_names[4]})
+    data = pd.concat([data, img_ROI], axis=1)
+    data = data.rename(columns={data.columns[4]: column_names[4]})
     pd.DataFrame.to_csv(data, outputfile, header=True, index=False)
 
+
 def inside_or_outside_atlas(electrode_coordinates_mni_path, atlas_path, mni_template_path, outputfile):
+    """
+    electrode_coordinates_mni_path='/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/electrode_localization/sub-RID0278_electrode_coordinates_mni.csv'
+    atlas_path='/Users/andyrevell/mount/TOOLS/atlases_and_templates/atlases/aal_res-1x1x1.nii.gz'
+    outputfile='/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/electrode_localization/electrode_localization_by_atlas/sub-RID0278_electrode_coordinates_mni_outside_outside_aal_res-1x1x1.csv'
+    mni_template_path ='/Users/andyrevell/mount/TOOLS/atlases_and_templates/templates/MNI152_T1_1mm_brain.nii'
+
+    """
     # getting imaging data
     img = nib.load(atlas_path)
     img_data = img.get_fdata()  # getting actual image data array
@@ -89,7 +108,15 @@ def inside_or_outside_atlas(electrode_coordinates_mni_path, atlas_path, mni_temp
     data = data.rename(columns={data.columns[4]: column_names[4]})
     pd.DataFrame.to_csv(data, outputfile, header=True, index=False)
 
+
 def distance_from_grayMatter(electrode_coordinates_mni_path, tissue_segmentation_path, outputfile):
+    """
+    electrode_coordinates_mni_path='/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/electrode_localization/sub-RID0278_electrode_coordinates_mni.csv'
+    atlas_path='/Users/andyrevell/mount/TOOLS/atlases_and_templates/atlases/aal_res-1x1x1.nii.gz'
+    outputfile='/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/electrode_localization/electrode_localization_by_atlas/sub-RID0278_electrode_coordinates_mni_distance_to_white_matter.csv'
+    tissue_segmentation_path ='/Users/andyrevell/mount/TOOLS/atlases_and_templates/atlases/tissue_res-1x1x1.nii.gz'
+
+    """
     # getting imaging data
     img = nib.load(tissue_segmentation_path)
     img_data = img.get_fdata()  # getting actual image data array

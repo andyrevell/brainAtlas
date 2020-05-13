@@ -89,6 +89,44 @@ def get_Functional_connectivity(inputfile,outputfile):
     print("...done\n\n")
 
 
+def get_Functional_connectivity_windowed(inputfile,outputfile):
+    print("\nCalculating Functional Connectivity:")
+    print("inputfile: {0}".format(inputfile))
+    print("outputfile: {0}".format(outputfile))
+    with open(inputfile, 'rb') as f: data, fs = pickle.load(f)#un-pickles files
+    data_array = np.array(data)
+    fs = float(fs)
+    moving_window = (1/5) #window moved over 1/5th of a second when this value = (1/5)
+    window_size = 1 #1 = 1s econds
+    totalSecs = np.floor(np.size(data_array,0)/fs/ moving_window)
+    totalSecs = int(totalSecs)
+    alphatheta = np.zeros((np.size(data_array,1),np.size(data_array,1),totalSecs))
+    beta = np.zeros((np.size(data_array,1),np.size(data_array,1),totalSecs))
+    broadband = np.zeros((np.size(data_array,1),np.size(data_array,1),totalSecs))
+    highgamma = np.zeros((np.size(data_array,1),np.size(data_array,1),totalSecs))
+    lowgamma = np.zeros((np.size(data_array,1),np.size(data_array,1),totalSecs))
+    startInd_non_round = 0
+    for w in range(0,totalSecs):
+        printProgressBar(w+1, totalSecs, prefix = "Progress:", suffix = "done. Calculating {0} of {1} matrices. Seconds: {2}. Moving Window: {3} Seconds.".format(w+1,totalSecs,totalSecs*moving_window,moving_window ) )
+        startInd_non_round = startInd_non_round + fs*moving_window
+        startInd_round = int(np.round(startInd_non_round))
+        endInd = int((startInd_round+fs*window_size) - 1) #calculating over 1 second windows
+        window = data_array[startInd_round:endInd,:]
+        broad = broadband_conn(window,int(fs),avgref=True)
+        adj_alphatheta, adj_beta, adj_lowgamma, adj_highgamma = multiband_conn(window,int(fs),avgref=True)
+        alphatheta[:,:,w] = adj_alphatheta
+        beta[:,:,w] = adj_beta
+        broadband[:,:,w] = broad
+        highgamma[:,:,w] = adj_highgamma
+        lowgamma[:,:,w] = adj_lowgamma
+    print("Saving to: {0}".format(outputfile))
+    electrode_row_and_column_names = data.columns.values
+    order_of_matrices_in_pickle_file = pd.DataFrame(["broadband", "alphatheta", "beta", "lowgamma" , "highgamma" ], columns=["Order of matrices in pickle file"])
+    with open(outputfile, 'wb') as f: pickle.dump([broadband, alphatheta, beta, lowgamma, highgamma, electrode_row_and_column_names, order_of_matrices_in_pickle_file], f)
+    #np.savez(outputfile, broadband=broadband, alphatheta=alphatheta, beta=beta, lowgamma=lowgamma, highgamma=highgamma)
+    print("...done\n\n")
+
+
 
 
 
@@ -113,3 +151,5 @@ def printProgressBar(iteration, total, prefix = '', suffix = '', decimals = 1, l
     # Print New Line on Complete
     if iteration == total:
         print()
+
+
