@@ -1,11 +1,14 @@
 #Purpose: Generate fake adjacency heatmap figures for illustration purposes
 library(igraph)
 library(pheatmap)
-library(R.matlab)
+library(R.matlab)#read matlab mat files
+library(reticulate)#read python pickle files
+library(abind) #combin multidimention matrices
 
 #parameters to change:
-data_directory = "/Users/andyrevell/Box/01_papers/paper001_brainAtlasChoiceSFC/figure5_data/"
-figure_directory = "/Users/andyrevell/Documents/01_writing/00_thesis_work/06_papers/paper001_brainAtlasChoiceSFC/figures/figure5/"
+data_directory = "/Users/andyrevell/mount/USERS/arevell/papers/paper001/data_processed/figure5_data/"
+figure_directory = "/Users/andyrevell/mount/USERS/arevell/papers/paper001/paper001/figures/figure5/"
+video_directory = "/Users/andyrevell/Desktop/supplemental_videos/functional_matrices_video/"
 setwd(figure_directory)
 n= 40 #number of cells in matrix
 number_of_images = 5
@@ -49,8 +52,7 @@ for (a in 1:number_of_images){
     }
 }
 
-
-
+######
 #create real_adjacency matrix from structure
 files_to_read = c(
   "sub-RID278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.aal_res-1x1x1.count.pass.connectivity",
@@ -64,6 +66,7 @@ files_to_read = c(
   "sub-RID0508_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.DK_res-1x1x1.count.pass.connectivity",
   "sub-RID0508_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.JHU_res-1x1x1.count.pass.connectivity"
 )
+
 for (i in 1:length(files_to_read)){
   
   structure = readMat(paste0(data_directory,files_to_read[i], ".mat" ))$connectivity
@@ -83,72 +86,57 @@ for (i in 1:length(files_to_read)){
   
 
 }
-#normalize
+#####
 
 
-structure[log10(structure) == -Inf] = 0
+#create real_adjacency matrix from function
+
+pd <- import("pandas")
+data_preictal <- pd$read_pickle(paste0(data_directory, "sub-RID0278_HUP138_phaseII_415933490000_416023190000_functionalConnectivity.pickle"))
+data_ictal  <- pd$read_pickle(paste0(data_directory,"sub-RID0278_HUP138_phaseII_416023190000_416112890000_functionalConnectivity.pickle"))
+data_postictal <- pd$read_pickle(paste0(data_directory,"sub-RID0278_HUP138_phaseII_416112890000_416292890000_functionalConnectivity.pickle"))
 
 
-madeup_data <- 1:30*(rnorm(30)+3)
+data_preictal_broadband = data_preictal[[1]]
+data_ictal_broadband = data_ictal[[1]]
+data_postictal_broadband = data_postictal[[1]]
+
+data_broadband = abind( data_preictal_broadband, data_ictal_broadband, data_postictal_broadband, along = 3)
+dim(data_broadband)
+data_broadband[dim(data_broadband)[1], dim(data_broadband)[1], ] = 1#scaling so that colors in heatmap are always on the same scale. The last pixel (bottom right corner) will always be 1
+
+times = c(1,40, 79, 90, 100,110, 200)
+
+color_time = c(rep('#008800',dim(data_preictal_broadband)[3] ), 
+               rep('#000088',dim(data_ictal_broadband)[3] ),
+               rep('#880088',dim(data_postictal_broadband)[3] ))
 
 
-par(mai = c(1.7, 1 , 0, 0.0))
-
-par(mai = c(0.1,0.1 , 0, 0.0))
-plot(madeup_data, col = "#aa00aa", pch = 16, cex = 2.5, 
-     xlab = "",
-     ylab = "", 
-     cex.lab = 3, font.lab = 2, xaxt="n", yaxt="n", bty='n' )
-
-#title(ylab="iEEG FC", line=0.4, cex.lab=5, font.lab = 2)
-#title(xlab="Training \nNetwork Features", line=7.4, cex.lab=5, font.lab = 2)
-
-model <- lm(madeup_data ~ c(1:30))
-abline(model,   col="#aa00aaff", lwd=15, lty=1)
-abline(h=-1.5,   col="black", lwd=18, lty=1)
-abline(v=0,   col="black", lwd=18, lty=1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-sim_logistic_data = function(sample_size = 25, beta_0 = -2, beta_1 = 3) {
-  x = rnorm(n = sample_size)
-  eta = beta_0 + beta_1 * x
-  p = 1 / (1 + exp(-eta))
-  y = rbinom(n = sample_size, size = 1, prob = p)
-  data.frame(y, x)
+time = 0 - dim(data_preictal_broadband)[3] # for printing the time on the plot
+for (t in 1:dim(data_broadband)[3]){
+  
+  color = colorRampPalette(c( "#ffffff","#ccd9ff","#6699ff","#ffcccc","#ffcccc","#ff8080", "#4d0000", "#330000"))(1000)
+  
+  matrix = data_broadband[,,t]
+  fname = paste0(video_directory, "function_",  sprintf('%03d',t), ".png")
+  png(fname, width = 512, height = 512, units = "px", res = 300)
+  par("mar" = c(0,0,0,0)) 
+  plot(NA,NA,xlim = c(0,10), ylim = c(0,10), xaxt = 'n', yaxt = 'n', bty = 'n', xlab = "", ylab = "")
+  pheatmap(matrix, color = color, legend = F, border_color = NA, cluster_rows = F,cluster_cols = F, treeheight_row = 0, treeheight_col = 0)
+  par(new=TRUE)
+  par("mar" = c(0,0,0,0)) 
+  plot(NA,NA,xlim = c(0,10), ylim = c(0,10), xaxt = 'n', yaxt = 'n')
+  cex = 0.5
+  x = 0.1; y = 0.1
+  text(x = x, y = y, labels = paste0("time = "), adj = c(0, 0), cex = cex, font = 2 )
+  text(x = x, y = y, labels = paste0("           ",time), adj = c(0, 0), col = color_time[t]  , cex = cex, font = 2)
+  time = time + 1
+  dev.off()
+  
+  
 }
 
-example_data = sim_logistic_data()
 
-# more detailed call to glm for logistic regression
-fit_glm = glm(y ~ x, data = example_data, family = binomial(link = "logit"))
-par(mai = c(0.09,0 , 0, 0.0))
-plot(y ~ x, data = example_data, 
-     pch = 16, cex = 2.5,
-     main = "", 
-     col = "#aa00aa", 
-     xlab = "",
-     ylab = "", 
-     cex.lab = 3, font.lab = 2, xaxt="n", yaxt="n", bty='n' )
+data_broadband[101, 101, ]
 
-curve(predict(fit_glm, data.frame(x), type = "response"), 
-      add = TRUE, col = "#aa00aaff",lwd=12, lty=1)
 
-correct = 0.1
-par(xpd=T)
-abline(h=-0.04,   col="black", lwd=18, lty=1)
-abline(v=min(example_data[,2])-correct,   col="black", lwd=18, lty=1)

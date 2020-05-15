@@ -107,7 +107,7 @@ def get_Functional_connectivity_windowed(inputfile,outputfile):
     lowgamma = np.zeros((np.size(data_array,1),np.size(data_array,1),totalSecs))
     startInd_non_round = 0
     for w in range(0,totalSecs):
-        printProgressBar(w+1, totalSecs, prefix = "Progress:", suffix = "done. Calculating {0} of {1} matrices. Seconds: {2}. Moving Window: {3} Seconds.".format(w+1,totalSecs,totalSecs*moving_window,moving_window ) )
+        printProgressBar(w+1, totalSecs, prefix = "Progress:", suffix = ". {0}/{1}. {2} sec. Mov Win: {3} sec.".format(w+1,totalSecs,np.round(totalSecs*moving_window,2),moving_window ) )
         startInd_non_round = startInd_non_round + fs*moving_window
         startInd_round = int(np.round(startInd_non_round))
         endInd = int((startInd_round+fs*window_size) - 1) #calculating over 1 second windows

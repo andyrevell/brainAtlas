@@ -24,12 +24,13 @@ import get_structure_function_correlation
 import matplotlib.pyplot as plt
 import pickle
 import numpy as np
+import os
 
+
+#Random Atlases
 sub_ID='RID0278'
-atlas_folder='RA_N1000'
-atlas_name='sub-RID278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.RA_N1000_Perm0001.count.pass.connectivity.mat'
-atlas_name_short='RA_N1000_Perm0001'
-electrode_localization_file_name = 'sub-RID0278_electrode_coordinates_mni_RA_N1000_Perm0001.csv'
+atlas_folder=['RA_N0010', 'RA_N0030', 'RA_N0050', 'RA_N0075','RA_N0100','RA_N0200','RA_N0300', 'RA_N0400', 'RA_N0500' , 'RA_N0750', 'RA_N1000', 'RA_N2000']
+perm = list(range(1,31))
 iEEG_filename="HUP138_phaseII"
 start_times_array=[394423190000,
 415933490000,
@@ -39,23 +40,47 @@ stop_times_array=[394512890000,
 416023190000,
 416112890000,
 416292890000]
+
+
 BIDS_proccessed_directory="/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed"
 
-for i in range(len(start_times_array)):
-    #Making Correct file paths and names based on above input
-    start_time_usec=start_times_array[i]
-    stop_time_usec=stop_times_array[i]
-    structure_file_path =  "{0}/sub-{1}/connectivity_matrices/structural/{2}/{3}".format(BIDS_proccessed_directory,sub_ID,atlas_folder,atlas_name)
-    function_file_path = "{0}/sub-{1}/connectivity_matrices/functional/sub-{1}_{2}_{3}_{4}_functionalConnectivity.pickle".format(BIDS_proccessed_directory,sub_ID,iEEG_filename,start_time_usec,stop_time_usec)
-    electrode_localization_by_atlas_file_path =  "{0}/sub-{1}/electrode_localization/electrode_localization_by_atlas/{2}".format(BIDS_proccessed_directory,sub_ID,electrode_localization_file_name)
-    outputfile =  "{0}/sub-{1}/connectivity_matrices/structure_function_correlation/{2}/sub-{1}_{3}_{4}_{5}_{6}_correlation.pickle".format(BIDS_proccessed_directory,sub_ID,atlas_folder,iEEG_filename,start_time_usec,stop_time_usec,atlas_name_short)
+for a in range(len(atlas_folder)):
+    outputfile_directory = "{0}/sub-{1}/connectivity_matrices/structure_function_correlation/{2}".format(BIDS_proccessed_directory,sub_ID,atlas_folder[a])
+    print('Output directory:'.format(outputfile_directory))
+    for p in range(len(perm)):
+        structure_file_name= 'sub-{0}_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.{1}_Perm{2}.count.pass.connectivity.mat'.format(sub_ID, atlas_folder[a], '{:04}'.format(perm[p])  )
+        for i in range(len(start_times_array)):
+            #Making Correct file paths and names based on above input
+            electrode_localization_file_name = 'sub-{0}_electrode_coordinates_mni_{1}_Perm{2}.csv'.format(sub_ID, atlas_folder[a], '{:04}'.format(perm[p])   )
+            start_time_usec=start_times_array[i]
+            stop_time_usec=stop_times_array[i]
+            structure_file_path =  "{0}/sub-{1}/connectivity_matrices/structural/{2}/{3}".format(BIDS_proccessed_directory,sub_ID,atlas_folder[a],structure_file_name)
+            function_file_path = "{0}/sub-{1}/connectivity_matrices/functional/sub-{1}_{2}_{3}_{4}_functionalConnectivity.pickle".format(BIDS_proccessed_directory,sub_ID,iEEG_filename,start_time_usec,stop_time_usec)
+            electrode_localization_by_atlas_file_path =  "{0}/sub-{1}/electrode_localization/electrode_localization_by_atlas/{2}".format(BIDS_proccessed_directory,sub_ID,electrode_localization_file_name)
 
-    #Run structure-function correlation calculation
-    get_structure_function_correlation.SFC(structure_file_path,function_file_path,electrode_localization_by_atlas_file_path, outputfile)
+            outputfile_name = "sub-{0}_{1}_{2}_{3}_{4}_{5}_correlation.pickle".format(sub_ID,iEEG_filename,start_time_usec,stop_time_usec, atlas_folder[a], '{:04}'.format(perm[p]))
+            outputfile = '{0}/{1}'.format(outputfile_directory, outputfile_name)
+
+            #Making sure files exist
+            if (os.path.exists(structure_file_path))==False:
+                print('{0} does not exist'.format(structure_file_path))
+            else:
+                if (os.path.exists(function_file_path)) == False:
+                    print('{0} does not exist'.format(function_file_path))
+                else:
+                    if (os.path.exists(electrode_localization_by_atlas_file_path))==False:
+                        print('{0} does not exist'.format(electrode_localization_by_atlas_file_path))
+                    else:
+                        if (os.path.exists(outputfile_directory))==False:
+                            print('{0} does not exist'.format(outputfile_directory))
+                        else:
+                            #Run structure-function correlation calculation
+                            print('Calculating: {0}'.format(outputfile_name))
+                            get_structure_function_correlation.SFC(structure_file_path,function_file_path,electrode_localization_by_atlas_file_path, outputfile)
 
 
 
-
+"""
 #plot SFC
 data_interictal_filepath = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/connectivity_matrices/structure_function_correlation/RA_N1000/sub-RID0278_HUP138_phaseII_394423190000_394512890000_RA_N1000_Perm0001_correlation.pickle'
 data_preictal_filepath = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/connectivity_matrices/structure_function_correlation/RA_N1000/sub-RID0278_HUP138_phaseII_415933490000_416023190000_RA_N1000_Perm0001_correlation.pickle'
@@ -113,3 +138,5 @@ axs.title.set_text('Structure-Function Correlation')
 axs.set_xlabel('Time (s)')
 axs.set_ylabel('Correlation')
 plt.show()
+
+"""
