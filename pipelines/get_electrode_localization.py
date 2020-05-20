@@ -56,9 +56,24 @@ def by_atlas(electrode_coordinates_mni_path, atlas_path, mni_template_path, outp
     # transform the real-world coordinates to the atals voxel space. Need to inverse the affine with np.linalg.inv(). To go from voxel to world, just input aff (dont inverse the affine)
     coordinates_voxels = nib.affines.apply_affine(np.linalg.inv(aff_mni), coordinates)
     coordinates_voxels = np.round(coordinates_voxels)  # round to nearest voxel
-    coordinates_voxels = coordinates_voxels.astype(int)
+    coordinates_voxels = coordinates_voxels.astype(int)    
+    try:
+        img_ROI = img_data[coordinates_voxels[:,0]-1, coordinates_voxels[:,1]-1, coordinates_voxels[:,2]-1]
+    except:
+        img_ROI = np.zeros((coordinates_voxels.shape[0],))
+        for i in range(0,coordinates_voxels.shape[0]):
+            if((coordinates_voxels[i,0]>img_data.shape[0]) or (coordinates_voxels[i,0]<1)):
+                img_ROI[i] = 0
+                print('Coordinate outside of MNI space: setting to zero')
+            elif((coordinates_voxels[i,1]>img_data.shape[1]) or (coordinates_voxels[i,1]<1)):
+                img_ROI[i] = 0  
+                print('Coordinate outside of MNI space: setting to zero')
+            elif((coordinates_voxels[i,2]>img_data.shape[2]) or (coordinates_voxels[i,2]<1)):
+                img_ROI[i] = 0   
+                print('Coordinate outside of MNI space: setting to zero')
+            else:
+                img_ROI[i] = img_data[coordinates_voxels[i,0]-1, coordinates_voxels[i,1]-1, coordinates_voxels[i,2]-1]
 
-    img_ROI = img_data[coordinates_voxels[:, 0] - 1, coordinates_voxels[:, 1] - 1, coordinates_voxels[:, 2] - 1]
     img_ROI = np.reshape(img_ROI, [img_ROI.shape[0], 1])
     img_ROI = img_ROI.astype(int)
     img_ROI = pd.DataFrame(img_ROI)

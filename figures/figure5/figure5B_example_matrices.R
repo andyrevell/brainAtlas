@@ -8,13 +8,13 @@ library(abind) #combin multidimention matrices
 #parameters to change:
 data_directory = "/Users/andyrevell/mount/USERS/arevell/papers/paper001/data_processed/figure5_data/"
 figure_directory = "/Users/andyrevell/mount/USERS/arevell/papers/paper001/paper001/figures/figure5/"
-video_directory = "/Users/andyrevell/Desktop/supplemental_videos/functional_matrices_video/"
+video_directory = "/Users/andyrevell/Desktop/supplemental_videos/functional_matrices_win02/"
 setwd(figure_directory)
-n= 40 #number of cells in matrix
-number_of_images = 5
-color_matrix = 1 #1 = red, 2 = blue, 3 = red-blue matrices
+#n= 40 #number of cells in matrix
+#number_of_images = 5
+#color_matrix = 1 #1 = red, 2 = blue, 3 = red-blue matrices
 #code to generate random adjacency matrix figures:
-for (a in 1:number_of_images){  
+#for (a in 1:number_of_images){  
   #making random matrix
   test = matrix(rnorm(n^2), n, n)*1
   test[1:10, seq(1, n, 2)] = test[1:10, seq(1, n, 2)] + 3
@@ -92,9 +92,9 @@ for (i in 1:length(files_to_read)){
 #create real_adjacency matrix from function
 
 pd <- import("pandas")
-data_preictal <- pd$read_pickle(paste0(data_directory, "sub-RID0278_HUP138_phaseII_415933490000_416023190000_functionalConnectivity.pickle"))
-data_ictal  <- pd$read_pickle(paste0(data_directory,"sub-RID0278_HUP138_phaseII_416023190000_416112890000_functionalConnectivity.pickle"))
-data_postictal <- pd$read_pickle(paste0(data_directory,"sub-RID0278_HUP138_phaseII_416112890000_416292890000_functionalConnectivity.pickle"))
+data_preictal <- pd$read_pickle(paste0(data_directory, "sub-RID0278_HUP138_phaseII_415933490000_416023190000_functionalConnectivity_window0.20.pickle"))
+data_ictal  <- pd$read_pickle(paste0(data_directory,"sub-RID0278_HUP138_phaseII_416023190000_416112890000_functionalConnectivity_window0.20.pickle"))
+data_postictal <- pd$read_pickle(paste0(data_directory,"sub-RID0278_HUP138_phaseII_416112890000_416292890000_functionalConnectivity_window0.20.pickle"))
 
 
 data_preictal_broadband = data_preictal[[1]]
@@ -113,24 +113,26 @@ color_time = c(rep('#008800',dim(data_preictal_broadband)[3] ),
 
 
 time = 0 - dim(data_preictal_broadband)[3] # for printing the time on the plot
+
+time = seq( 0- dim(data_preictal_broadband)[3] *0.2,  dim(data_ictal_broadband)[3] *0.2 + dim(data_postictal_broadband)[3] *0.2,0.2 )
 for (t in 1:dim(data_broadband)[3]){
   
   color = colorRampPalette(c( "#ffffff","#ccd9ff","#6699ff","#ffcccc","#ffcccc","#ff8080", "#4d0000", "#330000"))(1000)
   
   matrix = data_broadband[,,t]
-  fname = paste0(video_directory, "function_",  sprintf('%03d',t), ".png")
-  png(fname, width = 512, height = 512, units = "px", res = 300)
+  fname = paste0(video_directory, "function_",  sprintf('%04d',t), ".png")
+  png(fname, width = 1024, height = 1024, units = "px", res = 300)
   par("mar" = c(0,0,0,0)) 
   plot(NA,NA,xlim = c(0,10), ylim = c(0,10), xaxt = 'n', yaxt = 'n', bty = 'n', xlab = "", ylab = "")
   pheatmap(matrix, color = color, legend = F, border_color = NA, cluster_rows = F,cluster_cols = F, treeheight_row = 0, treeheight_col = 0)
   par(new=TRUE)
   par("mar" = c(0,0,0,0)) 
   plot(NA,NA,xlim = c(0,10), ylim = c(0,10), xaxt = 'n', yaxt = 'n')
-  cex = 0.5
+  cex = 0.7
   x = 0.1; y = 0.1
   text(x = x, y = y, labels = paste0("time = "), adj = c(0, 0), cex = cex, font = 2 )
-  text(x = x, y = y, labels = paste0("           ",time), adj = c(0, 0), col = color_time[t]  , cex = cex, font = 2)
-  time = time + 1
+  text(x = x, y = y, labels = paste0("           ",  round(time[t]) ), adj = c(0, 0), col = color_time[t]  , cex = cex, font = 2)
+  #time = time + 1
   dev.off()
   
   

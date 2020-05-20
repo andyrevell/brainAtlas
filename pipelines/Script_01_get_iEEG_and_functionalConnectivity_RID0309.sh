@@ -33,29 +33,33 @@ username=$1
 password=$2
 
 
-sub_ID="RID0536"
-iEEG_filename="HUP195_phaseII_D01"
-ignore_electrodes=""
+sub_ID="RID0309"
+iEEG_filename="HUP151_phaseII"
+ignore_electrodes="EKG1,EKG2,LB9,LB10,RD9,RD10"
 start_times_array=(
-494703750000
-494776940000
-494850130000
-529934830000
-530009500000
-530084170000
+494702000000
+494776000000)
+start_times_array=(494850000000
+529938316831
+530011424682)
+start_times_array=(530084532533
+473176000000
+508411424682
 )
 stop_times_array=(
-494776940000
-494850130000
-495030130000
-530009500000
-530084170000
-530264170000
+494776000000
+494850000000)
+stop_times_array=(495030000000
+530011424682
+530084532533)
+stop_times_array=(530264532533
+473250000000
+508484532533
 )
 
 for i in "${!start_times_array[@]}"; do
   printf "\n\n\nID: ${sub_ID}"
-  printf "\nStart: ${stop_times_array[i]}"
+  printf "\nStart: ${start_time_usec[i]}"
   printf "\nStop: ${stop_times_array[i]}"
   start_time_usec=${start_times_array[i]}
   stop_time_usec=${stop_times_array[i]}
@@ -63,7 +67,7 @@ for i in "${!start_times_array[@]}"; do
   BIDS_proccessed_directory="/gdrive/public/DATA/Human_Data/BIDS_processed"
   EEG_outputfile="${BIDS_proccessed_directory}/sub-${sub_ID}/eeg/sub-${sub_ID}_${iEEG_filename}_${start_time_usec}_${stop_time_usec}_EEG.pickle"
   functional_connectivity_inputfile=${EEG_outputfile}
-  functional_connectivity_outputfile="${BIDS_proccessed_directory}/sub-${sub_ID}/connectivity_matrices/functional/sub-${sub_ID}_${iEEG_filename}_${start_time_usec}_${stop_time_usec}_functionalConnectivity.pickle"
+  functional_connectivity_outputfile="${BIDS_proccessed_directory}/sub-${sub_ID}/connectivity_matrices/functional/eeg/sub-${sub_ID}_${iEEG_filename}_${start_time_usec}_${stop_time_usec}_functionalConnectivity.pickle"
 
   #Get iEEG data
   python3.6 -c 'import get_iEEG_data, sys; get_iEEG_data.get_iEEG_data(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6].split(","),sys.argv[7])' "$username" "$password" "$iEEG_filename" "$start_time_usec" "$stop_time_usec" "$ignore_electrodes" "$EEG_outputfile"

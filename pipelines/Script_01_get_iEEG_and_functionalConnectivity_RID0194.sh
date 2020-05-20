@@ -27,25 +27,30 @@
 #   Saves EEG timeseries in specified output directors
 
 #Example:
-#./ShellScript_01_get_iEEG_and_functionalConnectivity.sh 'arevell' 'password'
+#./Script_01_get_iEEG_and_functionalConnectivity.sh 'arevell' 'password'
 
 username=$1
 password=$2
 
+sub_ID="RID0194"
+iEEG_filename="HUP134_phaseII_D02"
+ignore_electrodes="EKG1,EKG2"
 
-sub_ID="RID0320"
-iEEG_filename="HUP140_phaseII_D02"
-ignore_electrodes="EKG1,EKG2,RB01,RB10,LB09"
 start_times_array=(
-331958316666
-)
+179223935812
+179302933433
+179381931054
+157702933433)
 stop_times_array=(
-332335094986
-)
+179302933433
+179381931054
+179561931054
+157882933433)
+
 
 for i in "${!start_times_array[@]}"; do
   printf "\n\n\nID: ${sub_ID}"
-  printf "\nStart: ${stop_times_array[i]}"
+  printf "\nStart: ${start_time_usec[i]}"
   printf "\nStop: ${stop_times_array[i]}"
   start_time_usec=${start_times_array[i]}
   stop_time_usec=${stop_times_array[i]}
@@ -53,7 +58,7 @@ for i in "${!start_times_array[@]}"; do
   BIDS_proccessed_directory="/gdrive/public/DATA/Human_Data/BIDS_processed"
   EEG_outputfile="${BIDS_proccessed_directory}/sub-${sub_ID}/eeg/sub-${sub_ID}_${iEEG_filename}_${start_time_usec}_${stop_time_usec}_EEG.pickle"
   functional_connectivity_inputfile=${EEG_outputfile}
-  functional_connectivity_outputfile="${BIDS_proccessed_directory}/sub-${sub_ID}/connectivity_matrices/functional/sub-${sub_ID}_${iEEG_filename}_${start_time_usec}_${stop_time_usec}_functionalConnectivity.pickle"
+  functional_connectivity_outputfile="${BIDS_proccessed_directory}/sub-${sub_ID}/connectivity_matrices/functional/eeg/sub-${sub_ID}_${iEEG_filename}_${start_time_usec}_${stop_time_usec}_functionalConnectivity.pickle"
 
   #Get iEEG data
   python3.6 -c 'import get_iEEG_data, sys; get_iEEG_data.get_iEEG_data(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6].split(","),sys.argv[7])' "$username" "$password" "$iEEG_filename" "$start_time_usec" "$stop_time_usec" "$ignore_electrodes" "$EEG_outputfile"

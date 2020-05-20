@@ -1,0 +1,27 @@
+Steps for Computing Structural Connectivity for a new Patient:
+
+1) Run the script "diffusion_imaging_correction.sh" for patient
+Use: to process and correct the patient's dwi images
+Example: sh diffusion_imaging_correction.sh /gdrive/public/DATA/Human_Data/BIDS_new /gdrive/public/DATA/Human_Data/BIDS_processed /gdrive/public/TOOLS/atlases_and_templates/templates RID0278 preop3T
+
+2) Run the script "batchCreateConnMat.sh"
+Use: to calculate structural connectivity matrices based on random atlases 
+Example: ./batchCreateConnMat.sh 30 0278  
+Arguments: @(1) number of permutations of each atlas node to create @(2) the subject ID number. Please pass this in as 4 digit padded.
+
+3) Run the script "batchCreateConnMat_standard_atlases.sh"
+Use: to calculate structural connectivity matrices based on standard atlases
+Example: ./batchCreateConnMat_standard_atlases.sh 0278  
+Arguments: @(1) The subject ID number. Please pass this in as 4 digit padded.
+
+** Optional Network Characterization 
+
+4) Run the MATALB file "batchReturnNetworkStats.m"
+Use: to calculate network measures of the generated connectivity matrices based on random atlases
+Example: matlab -nosplash -nodesktop -r "addpath(genpath('/gdrive/public/USERS/silvaale')); batchReturnNetworkStats([278],[10,30,50,75,100,200,300,400,500,750,1000,2000],30,'/gdrive/public/USERS/silvaale/'); exit"
+Arguments: @(1) The subjects you want to analyze as a list of integers. You can pass these in as 3 or 4 digit padded. @(2) A list of nodes to analyze. Pass in without padding. @(3) The output directory to save the data
+
+5) Run the MATALB file "batchReturnNetworkStats_standard_atlases.m"
+Use: to calculate network measures of the generated connectivity matrices based on standard atlases
+Example: matlab -nosplash -nodesktop -r "addpath(genpath('/gdrive/public/USERS/silvaale')); batchReturnNetworkStats_standard_atlases([440,583],'/gdrive/public/USERS/silvaale/'); exit"
+Arguments: @(1) The subjects you want to analyze as a list of integers. You can pass these in as 3 or 4 digit padded. @(2) The output directory 

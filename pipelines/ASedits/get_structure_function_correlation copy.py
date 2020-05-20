@@ -63,24 +63,33 @@ def SFC(structure_file_path,function_file_path,electrode_localization_by_atlas_f
     """
     
     #Example:
-    structure_file_path= '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0536/connectivity_matrices/structural/RA_N0100/sub-RID0536_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.RA_N0100_Perm0001.count.pass.connectivity.mat'
-    electrode_localization_by_atlas_file_path = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0536/electrode_localization/electrode_localization_by_atlas/sub-RID0536_electrode_coordinates_mni_RA_N0100_Perm0001.csv'
+    structure_file_path= '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/connectivity_matrices/structural/RA_N1000/sub-RID0278_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.RA_N1000_Perm0001.count.pass.connectivity.mat'
+    electrode_localization_by_atlas_file_path = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/electrode_localization/electrode_localization_by_atlas/sub-RID0278_electrode_coordinates_mni_RA_N1000_Perm0001.csv'
    
     #seizure 3
     #pre-ictal 
-    function_file_path = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0536/connectivity_matrices/functional/eeg/sub-RID0536_HUP195_phaseII_D01_250573896890_250710930770_functionalConnectivity.pickle'
+    function_file_path = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/connectivity_matrices/functional/sub-RID0278_HUP138_phaseII_415933490000_416023190000_functionalConnectivity_window0.20.pickle'
     #ictal 
-    function_file_path = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0536/connectivity_matrices/functional/eeg/sub-RID0536_HUP195_phaseII_D01_250710930770_250847964650_functionalConnectivity.pickle'
+    function_file_path = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/connectivity_matrices/functional/sub-RID0278_HUP138_phaseII_416023190000_416112890000_functionalConnectivity_window0.20.pickle'
     #postictal 
-    function_file_path = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0536/connectivity_matrices/functional/eeg/sub-RID0536_HUP195_phaseII_D01_250847964650_251027964650_functionalConnectivity.pickle'
+    function_file_path = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/connectivity_matrices/functional/sub-RID0278_HUP138_phaseII_416112890000_416292890000_functionalConnectivity_window0.20.pickle'
+
+    #seizure 1
+    #pre-ictal 
+    function_file_path = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/connectivity_matrices/functional/sub-RID0278_HUP138_phaseII_248432340000_248525740000_functionalConnectivity.pickle'
+    #ictal
+    function_file_path = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/connectivity_matrices/functional/sub-RID0278_HUP138_phaseII_248525740000_248619140000_functionalConnectivity.pickle'
+    #postictal 
+    function_file_path = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/connectivity_matrices/functional/sub-RID0278_HUP138_phaseII_248619140000_248799140000_functionalConnectivity.pickle'
 
     #Output Files:
+    #seizure 3
     #pre-ictal
-    outputfile = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0536/connectivity_matrices/structure_function_correlation/RA_N0100/sub-RID0536_HUP195_phaseII_D01_250573896890_250710930770_RA_N0100_Perm0001_correlation.pickle'
+    outputfile = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/connectivity_matrices/structure_function_correlation/RA_N1000/sub-RID0278_HUP138_phaseII_415933490000_416023190000_RA_N1000_Perm0001_correlation_window0.20.pickle'
     #ictal 
-    outputfile = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0536/connectivity_matrices/structure_function_correlation/RA_N0100/sub-RID0536_HUP195_phaseII_D01_250710930770_250847964650_RA_N0100_Perm0001_correlation.pickle'
+    outputfile = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/connectivity_matrices/structure_function_correlation/RA_N1000/sub-RID0278_HUP138_phaseII_416023190000_416112890000_RA_N1000_Perm0001_correlation_window0.20.pickle'
     #postictal 
-    outputfile = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0536/connectivity_matrices/structure_function_correlation/RA_N0100/sub-RID0536_HUP195_phaseII_D01_250847964650_251027964650_RA_N0100_Perm0001_correlation.pickle'
+    outputfile = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/connectivity_matrices/structure_function_correlation/RA_N1000/sub-RID0278_HUP138_phaseII_416112890000_416292890000_RA_N1000_Perm0001_correlation_window0.20.pickle'
 
     """
     #Get functional connecitivty data in pickle file format

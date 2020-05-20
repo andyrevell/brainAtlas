@@ -15,7 +15,7 @@ Output:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Example:
-python3.6 -c 'import Script_02_get_electrode_localization_ASedit as el; el.batch_localize_electrodes([RID0320],[10,30,50,75,100,200,300,400,500,750,1000,2000],1,30,True)'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+python3.6 -c 'import Script_02_get_electrode_localization_ASedit as el; el.batch_localize_electrodes([320],[10,30,50,75,100,200,300,400,500,750,1000,2000],1,30,True)'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """
 
@@ -34,15 +34,15 @@ def batch_localize_electrodes(subjects,random_atlas_number_parcellations,permLow
     mni_template_path = '/gdrive/public/TOOLS/atlases_and_templates/templates/MNI152_T1_1mm_brain.nii.gz'
     atlas_dir = '/gdrive/public/TOOLS/atlases_and_templates/atlases/custom_atlases/random_atlases/whole_brain'
     for sub in subjects:
-        electrode_coordinates_mni_path = '{0}/sub-{1}/electrode_localization/sub-{1}_electrode_coordinates_mni.csv'.format(BIDS_dir,sub)
-        output_dir =  '{0}/sub-{1}/electrode_localization/electrode_localization_by_atlas'.format(BIDS_dir,sub)
+        electrode_coordinates_mni_path = '{0}/sub-RID{1}/electrode_localization/sub-RID{1}_electrode_coordinates_mni.csv'.format(BIDS_dir,'{:04}'.format(sub))
+        output_dir =  '{0}/sub-RID{1}/electrode_localization/electrode_localization_by_atlas'.format(BIDS_dir,'{:04}'.format(sub))
         for node in random_atlas_number_parcellations:
             for perm in perms:
                 atlas_path = '{0}/{1}/{1}_Perm{2}.nii.gz'.format(atlas_dir, 'RA_N'+'{:04}'.format(node), '{:04}'.format(perm))
                 #print(atlas_path)
                 if (os.path.exists(atlas_path)):
                     if (os.path.exists(output_dir)):
-                        file_name = 'sub-{0}_electrode_coordinates_mni_{1}_Perm{2}.csv'.format(sub, 'RA_N'+'{:04}'.format(node), '{:04}'.format(perm))
+                        file_name = 'sub-RID{0}_electrode_coordinates_mni_{1}_Perm{2}.csv'.format('{:04}'.format(sub), 'RA_N'+'{:04}'.format(node), '{:04}'.format(perm))                                                
                         outputfile = '{0}/{1}'.format(output_dir,file_name)
                         print('Saving: {0}'.format(file_name))
                         get_electrode_localization.by_atlas(electrode_coordinates_mni_path, atlas_path, mni_template_path, outputfile)
@@ -50,23 +50,23 @@ def batch_localize_electrodes(subjects,random_atlas_number_parcellations,permLow
                         print('{0} directory does not exist'.format(output_dir))
                         print('making directory')
                         os.mkdir(output_dir)
-                        file_name = 'sub-{0}_electrode_coordinates_mni_{1}_Perm{2}.csv'.format(sub, 'RA_N'+'{:04}'.format(node), '{:04}'.format(perm))
+                        file_name = 'sub-RID{0}_electrode_coordinates_mni_{1}_Perm{2}.csv'.format('{:04}'.format(sub), 'RA_N'+'{:04}'.format(node), '{:04}'.format(perm))                                                
                         outputfile = '{0}/{1}'.format(output_dir,file_name)
                         print('Saving: {0}'.format(file_name))
                         get_electrode_localization.by_atlas(electrode_coordinates_mni_path, atlas_path, mni_template_path, outputfile)
                 else:
                     print('{0} directory does not exist'.format(atlas_path))
-
+    
     if(compute_standard_atlases):
         atlas_dir_temp = '/gdrive/public/TOOLS/atlases_and_templates/atlases'
         for sub in subjects:
-            electrode_coordinates_mni_path = '{0}/sub-{1}/electrode_localization/sub-{1}_electrode_coordinates_mni.csv'.format(BIDS_dir,sub)
-            output_dir =  '{0}/sub-{1}/electrode_localization/electrode_localization_by_atlas'.format(BIDS_dir,sub)
+            electrode_coordinates_mni_path = '{0}/sub-RID{1}/electrode_localization/sub-RID{1}_electrode_coordinates_mni.csv'.format(BIDS_dir,'{:04}'.format(sub))
+            output_dir =  '{0}/sub-RID{1}/electrode_localization/electrode_localization_by_atlas'.format(BIDS_dir,'{:04}'.format(sub))
             for temp in standard_atlas_list:
                 atlas_path = '{0}/{1}.nii.gz'.format(atlas_dir_temp, temp)
                 if (os.path.exists(atlas_path)):
                     if (os.path.exists(output_dir)):
-                        file_name = 'sub-{0}_electrode_coordinates_mni_{1}.csv'.format(sub, temp)
+                        file_name = 'sub-RID{0}_electrode_coordinates_mni_{1}.csv'.format('{:04}'.format(sub), temp)                                               
                         outputfile = '{0}/{1}'.format(output_dir,file_name)
                         print('Saving: {0}'.format(file_name))
                         get_electrode_localization.by_atlas(electrode_coordinates_mni_path, atlas_path, mni_template_path, outputfile)
@@ -74,12 +74,12 @@ def batch_localize_electrodes(subjects,random_atlas_number_parcellations,permLow
                         print('{0} directory does not exist'.format(output_dir))
                 else:
                     print('{0} directory does not exist'.format(atlas_path))
-
-
-
-
-
-
+            
+            
+    
+                        
+                
+        
 #Random Atlases
 
 
