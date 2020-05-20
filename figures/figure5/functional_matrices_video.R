@@ -6,15 +6,17 @@ library(reticulate)#read python pickle files
 library(abind) #combin multidimention matrices
 pd <- import("pandas")
 
+options(scipen=999)#stop R from reading numbers as scientific notation. Helps with readin ghte long times from iEEG org verbatim rather than sci notation
+
 #sub_ID='RID0194'; iEEG_filename = 'HUP134_phaseII_D02'; interictal_time = c(157702933433,	157882933433); preictal_time = c(179223935812,	179302933433); ictal_time = c(179302933433,	179381931054); postictal_time = c(179381931054,	179561931054)
 
 #sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; interictal_time = c(226925740000,	227019140000); preictal_time = c(248432340000,	248525740000); ictal_time = c(248525740000,	248619140000); postictal_time = c(248619140000,	248799140000)
 #sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; interictal_time = c(317408330000,	317568440000); preictal_time = c(338848220000,	339008330000); ictal_time = c(339008330000,	339168440000); postictal_time = c(339168440000,	339348440000)
 #sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; interictal_time = c(394423190000,	394512890000); preictal_time = c(415933490000,	416023190000); ictal_time = c(416023190000,	416112890000); postictal_time = c(416112890000,	416292890000)
-sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; interictal_time = c(407898590000,	407998350000); preictal_time = c(429398830000,	429498590000); ictal_time = c(429498590000,	429598350000); postictal_time = c(429598350000,	429778350000)
+#sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; interictal_time = c(407898590000,	407998350000); preictal_time = c(429398830000,	429498590000); ictal_time = c(429498590000,	429598350000); postictal_time = c(429598350000,	429778350000)
 #sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; interictal_time = c(436904560000,	437015820000); preictal_time = c(458393300000,	458504560000); ictal_time = c(458504560000,	458615820000); postictal_time = c(458615820000,	458795820000)
 
-#sub_ID='RID0309'; iEEG_filename = 'HUP151_phaseII'; interictal_time = c(473176000000,	473250000000); preictal_time = c(494702000000,	494776000000); ictal_time = c(494776000000,	494850000000); postictal_time = c(494850000000,	495030000000)
+sub_ID='RID0309'; iEEG_filename = 'HUP151_phaseII'; interictal_time = c(473176000000,	473250000000); preictal_time = c(494702000000,	494776000000); ictal_time = c(494776000000,	494850000000); postictal_time = c(494850000000,	495030000000)
 #sub_ID='RID0309'; iEEG_filename = 'HUP151_phaseII'; interictal_time = c(508411424682,	508484532533); preictal_time = c(529938316831,	530011424682); ictal_time = c(530011424682,	530084532533); postictal_time = c(530084532533,	530264532533)
 
 #sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; interictal_time = c(63129090000,	63309090000); preictal_time = c(84609521985,	84729094008); ictal_time = c(84729094008,	84848666031 ); postictal_time = c(84848666031,	85028666031)
