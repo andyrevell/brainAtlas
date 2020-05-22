@@ -85,7 +85,7 @@ stop_times_array=(
 
 for i in "${!start_times_array[@]}"; do
   printf "\n\n\nID: ${sub_ID}"
-  printf "\nStart: ${start_time_usec[i]}"
+  printf "\nStart: ${start_times_array[i]}"
   printf "\nStop: ${stop_times_array[i]}"
   start_time_usec=${start_times_array[i]}
   stop_time_usec=${stop_times_array[i]}

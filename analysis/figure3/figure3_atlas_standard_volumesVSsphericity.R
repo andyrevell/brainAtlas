@@ -1,4 +1,5 @@
 data_directory = "/Users/andyrevell/mount/USERS/arevell/papers/paper001/data_processed/figure3_data"
+save_data_directory= "/Users/andyrevell/mount/USERS/arevell/papers/paper001/data_processed/figure4_data"
 figure_directory = "/Users/andyrevell/mount/USERS/arevell/papers/paper001/paper001/figures/figure3"
 setwd(data_directory)
 library(ggplot2)
@@ -24,6 +25,14 @@ for (i in 1:ncol(data_sphericity)){data_list_sphericity[[i]] = data_sphericity[!
 #Calculating means
 mean_volumes = lapply(data_list_volumes, mean)
 mean_sphericity = lapply(data_list_sphericity, mean)
+
+#save this mean volumes for figure 4
+volumes_save_data = matrix(NA, nrow = length(names(data_volumes)), ncol = 1 )
+volumes_save_data[,1] = unlist(mean_volumes)
+volumes_save_data = data.frame(volumes_save_data)
+
+row.names(volumes_save_data) = names(data_volumes)
+write.table(volumes_save_data,paste0(save_data_directory, "/mean_volumes.csv"), row.names = T, col.names=FALSE, sep = ",")
 
 
 ##########################################################################################################################################

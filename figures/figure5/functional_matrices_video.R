@@ -22,7 +22,7 @@ options(scipen=999)#stop R from reading numbers as scientific notation. Helps wi
 #sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; interictal_time = c(63129090000,	63309090000); preictal_time = c(84609521985,	84729094008); ictal_time = c(84729094008,	84848666031 ); postictal_time = c(84848666031,	85028666031)
 #sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; interictal_time = c(152892270000,	153072270000); preictal_time = c(164626956810,	164694572385); ictal_time = c(164694572385,	164762187960 ); postictal_time = c(164762187960,	164942187960)
 #sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; interictal_time = c(237460640000,	237640640000); preictal_time = c(250573896890,	250710930770); ictal_time = c(250710930770,	250847964650 ); postictal_time = c(250847964650,	251027964650)
-#sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; interictal_time = c(269881750000,	270061750000); preictal_time = c(286753301266,	286819539584); ictal_time = c(286819539584,	286885777902 ); postictal_time = c(286885777902,	287065777902)
+sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; interictal_time = c(269881750000,	270061750000); preictal_time = c(286753301266,	286819539584); ictal_time = c(286819539584,	286885777902 ); postictal_time = c(286885777902,	287065777902)
 
 
 

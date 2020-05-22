@@ -99,8 +99,8 @@ stop_times_array=[494776000000,
 
 sub_ID='RID0320'
 iEEG_filename="HUP140_phaseII_D02"
-start_times_array=[331663170266,
-331999132626,
+start_times_array=[331624747156,
+331979921071,
 332335094986,
 340243011431,
 340528040025,
@@ -111,7 +111,7 @@ start_times_array=[331663170266,
 310399132626,
 318928040025,
 302115130000]
-stop_times_array=[331999132626,
+stop_times_array=[331979921071,
 332335094986,
 332635094986,
 340528040025,
@@ -162,10 +162,57 @@ stop_times_array=[84729094008,
 
 
 
+sub_ID='RID0440'
+iEEG_filename='HUP172_phaseII'
+#seizure 402704260829
+start_times_array=[
+356850680000,
+402651841658,
+402704260829,
+402756680000,
+367346290000,
+408637470000,
+408697930000,
+408758390000,
+565390000000,
+586927711315,
+586990000000,
+587052288685,
+643376000000,
+664924780939,
+664976000000,
+665027219061,
+671279000000,
+692821000000,
+692879000000,
+692937000000]
+stop_times_array=[
+356903099171,
+402704260829,
+402756680000,
+402936680000,
+367406750000,
+408697930000,
+408758390000,
+408938390000,
+565452288685,
+586990000000,
+587052288685,
+587232288685,
+643427219061,
+664976000000,
+665027219061,
+665207219061,
+671337000000,
+692879000000,
+692937000000,
+693117000000]
+
+
+
 
 import get_structure_function_correlation
 import os
-
 BIDS_proccessed_directory="/gdrive/public/DATA/Human_Data/BIDS_processed"
 #Random Atlases
 atlas_folder=['RA_N0010', 'RA_N0030', 'RA_N0050', 'RA_N0075','RA_N0100','RA_N0200',
@@ -240,3 +287,4 @@ for a in range(len(atlas_folder)):
                         #Run structure-function correlation calculation
                         print('Calculating: {0}'.format(outputfile_name))
                         get_structure_function_correlation.SFC(structure_file_path,function_file_path,electrode_localization_by_atlas_file_path, outputfile)
+

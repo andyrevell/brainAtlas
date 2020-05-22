@@ -5,21 +5,35 @@ data_directory = "/Users/andyrevell/mount/USERS/arevell/papers/paper001/data_pro
 output_directory= "/Users/andyrevell/mount/USERS/arevell/papers/paper001/paper001/figures/figure5/structure_function_correlation"
 setwd(output_directory)
 
+options(scipen=999)#prevent scientifuc notation. iEEG org times are very long, so helps when reading files to read the number string verbatim
 
-
-#sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; ictal_start_time = 248525740000
-#sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; ictal_start_time = 339008330000
-#sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; ictal_start_time = 416023190000
-#sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; ictal_start_time = 429498590000
-#sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; ictal_start_time = 458504560000
-#sub_ID='RID0194'; iEEG_filename = 'HUP134_phaseII_D02'; ictal_start_time = 179302933433
-#sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01';  ictal_start_time = 84729094008
-#sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; ictal_start_time = 164694572385
-#sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; ictal_start_time = 250710930770
-#sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01';  ictal_start_time = 286819539584
-
-#sub_ID='RID0309'; iEEG_filename = 'HUP151_phaseII'; ictal_start_time = 494776000000
-sub_ID='RID0309'; iEEG_filename = 'HUP151_phaseII';  ictal_start_time = 530011424682
+for (z in 1:20){
+  if (z == 1){sub_ID='RID0194'; iEEG_filename = 'HUP134_phaseII_D02'; ictal_start_time = 179302933433}
+  
+  if (z == 2){sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; ictal_start_time = 248525740000}
+  if (z == 3){sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; ictal_start_time = 339008330000}
+  if (z == 4){sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; ictal_start_time = 416023190000}
+  if (z == 5){sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; ictal_start_time = 429498590000}
+  if (z == 6){sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; ictal_start_time = 458504560000}
+  
+  if (z == 7){sub_ID='RID0309'; iEEG_filename = 'HUP151_phaseII'; ictal_start_time = 494776000000}
+  if (z == 8){sub_ID='RID0309'; iEEG_filename = 'HUP151_phaseII';  ictal_start_time = 530011424682}
+  
+  if (z == 9){sub_ID='RID0320'; iEEG_filename = 'HUP140_phaseII_D02';  ictal_start_time = 331999132626}
+  if (z == 10){sub_ID='RID0320'; iEEG_filename = 'HUP140_phaseII_D02';  ictal_start_time = 340528040025}
+  if (z == 11){sub_ID='RID0320'; iEEG_filename = 'HUP140_phaseII_D02'; ictal_start_time = 344573548935}
+  
+  if (z == 12){sub_ID='RID0440'; iEEG_filename = 'HUP172_phaseII';  ictal_start_time = 402704260829}
+  if (z == 13){sub_ID='RID0440'; iEEG_filename = 'HUP172_phaseII'; ictal_start_time = 408697930000}
+  if (z == 14){sub_ID='RID0440'; iEEG_filename = 'HUP172_phaseII';  ictal_start_time = 586990000000}
+  if (z == 15){sub_ID='RID0440'; iEEG_filename = 'HUP172_phaseII';  ictal_start_time = 664976000000}
+  if (z == 16){sub_ID='RID0440'; iEEG_filename = 'HUP172_phaseII';  ictal_start_time = 692879000000}
+  
+  
+  if (z == 17){sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01';  ictal_start_time = 84729094008}
+  if (z == 18){sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; ictal_start_time = 164694572385}
+  if (z == 19){sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; ictal_start_time = 250710930770}
+  if (z == 20){sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01';  ictal_start_time = 286819539584}
 
 
 file_name = paste0('sub-', sub_ID, '_', iEEG_filename,  '_ICTAL_', ictal_start_time, '_SFC_All_Atlases.RData')
@@ -49,13 +63,13 @@ standard_atlases=c('aal_res-1x1x1', 'AAL600', 'CPAC200_res-1x1x1', 'desikan_res-
           'Schaefer2018_300Parcels_17Networks_order_FSLMNI152_1mm' , 'Schaefer2018_400Parcels_17Networks_order_FSLMNI152_1mm', 
           'Schaefer2018_1000Parcels_17Networks_order_FSLMNI152_1mm', 'Talairach_res-1x1x1')
 
-random_atlases_to_plot = c('RA_N0010', 'RA_N0030', 'RA_N0100', 'RA_N1000')
+random_atlases_to_plot = c('RA_N0010', 'RA_N0030','RA_N0100','RA_N1000')
 standard_atlases_to_plot = c('aal_res-1x1x1',  'CPAC200_res-1x1x1',
                              'Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm','Schaefer2018_1000Parcels_17Networks_order_FSLMNI152_1mm',
                              'JHU_res-1x1x1')
 
 standard_atlases_legend = c('AAL', 'CPAC', 'Schaefer 100', 'Schaefer 1000','JHU')
-random_atlases_legend = c('10', '30', '100', 'N = \n1000', 'Schaefer1000')
+random_atlases_legend = c('10', '30','100', '1000')
 #########
 #to caluclate moving average:
 ma <- function(x, n = 10){filter(x, rep(1 / n, n), sides = 2)}
@@ -73,7 +87,7 @@ standard_atlas_colors = c(
 )
 
 #standard_atlas_colors = rainbow(length(standard_atlases_to_plot), s= 0.9,v=0.9,start = 0, end = 0.8, alpha = 0.9)
-random_atlas_colors = rainbow(length(standard_atlases_to_plot), s= 0.9,v=0.9,start = 0.60, end = 0.75, alpha = 0.9)
+random_atlas_colors = rainbow(length(random_atlases_to_plot), s= 0.9,v=0.9,start = 0.65, end = 0.75, alpha = 0.9)
 
 
 
@@ -130,7 +144,7 @@ ylim = c(-0.1, 0.6)
 standard_atlases_line_width = 3
 random_atlases_line_width = 3
 standard_atlas_colors_transparency = 'ff'
-CI95_color = "#99999966"
+CI95_color = "#99999922"
 
 mar_1 = 0
 mar_2 = 5
@@ -207,7 +221,12 @@ title(main = "Standard", line = line_main, cex.main = cex_main, font.main = 1)
 
 par(xpd = T)
 mtext(text="Structure-Function Correlation",side=3,line=-1.7,outer=TRUE,cex=2, font = 4)
-mtext(text=paste0("Standard vs Random Atlases: sub-",sub_ID),side=3,line=-3,outer=TRUE,cex=1.7, font = 3)
+mtext(text=paste0("Standard vs Random Atlases"),side=3,line=-3,outer=TRUE, cex=1, font = 3)
+      
+      
+mtext(text=paste0("sub-", sub_ID, '_', iEEG_filename,  '_ICTAL_', ictal_start_time),
+      side=1,line=-1,outer=TRUE, cex=0.6, font = 1, at = c(0),adj = 0)
+
 par(xpd = F)
 #plotting parameters
 
@@ -327,3 +346,6 @@ mtext(text="Time (s)",side=1,line=-1,outer=TRUE,cex=1.7)
 
 
 dev.off()
+
+
+}

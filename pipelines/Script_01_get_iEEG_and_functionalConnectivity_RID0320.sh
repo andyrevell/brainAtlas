@@ -37,11 +37,11 @@ sub_ID="RID0320"
 iEEG_filename="HUP140_phaseII_D02"
 ignore_electrodes="EKG1,EKG2,LB09,LD07,LD08,LE09,LE11,LE12,RB01,RB12,RB10"
 start_times_array=(
-331663170266
-331999132626
-332335094986)
-start_times_array=(340243011431
-340528040025
+331624747156
+331979921071)
+start_times_array=(332335094986)
+start_times_array=(340243011431)
+start_times_array=(340528040025
 340813068619)
 start_times_array=(344266714798
 344573548935
@@ -51,11 +51,11 @@ start_times_array=(318928040025)
 start_times_array=(302115130000)
 
 stop_times_array=(
-331999132626
-332335094986
-332635094986)
-stop_times_array=(340528040025
-340813068619
+331979921071
+332335094986)
+start_times_array=(332635094986)
+stop_times_array=(340528040025)
+start_times_array=(340813068619
 341113068619)
 stop_times_array=(344573548935
 344880383072
@@ -66,7 +66,7 @@ stop_times_array=(302295130000)
 
 for i in "${!start_times_array[@]}"; do
   printf "\n\n\nID: ${sub_ID}"
-  printf "\nStart: ${start_time_usec[i]}"
+  printf "\nStart: ${start_times_array[i]}"
   printf "\nStop: ${stop_times_array[i]}"
   start_time_usec=${start_times_array[i]}
   stop_time_usec=${stop_times_array[i]}
