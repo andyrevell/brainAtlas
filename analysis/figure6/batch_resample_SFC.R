@@ -6,12 +6,12 @@
 library("pracma")#need for interpolations
 #Andy computer:
 processed_SFC_dir = "/Users/andyrevell/mount/USERS/arevell/papers/paper001/data_processed/figure5_data/structure_function_correlation/"
-resampled_SFC_dir = "/Users/andyrevell/mount/USERS/arevell/papers/paper001/data_processed/figure6_data/average_SFC_ALL_PATIENTS/medians/"
+resampled_SFC_dir = "/Users/andyrevell/mount/USERS/arevell/papers/paper001/data_processed/figure6_data/average_SFC_ALL_PATIENTS/medians/all/"
 
 #Borel:
 #processed_SFC_dir = "/gdrive/public/USERS/arevell/papers/paper001/data_processed/figure5_data/structure_function_correlation/"
 # change this to be either medians/up/downsample 
-#resampled_SFC_dir = "/gdrive/public/USERS/arevell/papers/paper001/data_processed/figure6_data/average_SFC_ALL_PATIENTS/medians/"
+#resampled_SFC_dir = "/gdrive/public/USERS/arevell/papers/paper001/data_processed/figure6_data/average_SFC_ALL_PATIENTS/medians/all/"
 
 
   
@@ -32,3 +32,4 @@ for(cur_file in all_files){
   output_resampled_SFC_path = paste(resampled_SFC_dir,"resampled_",cur_file,sep="") 
   resample_SFC(processed_SFC_path,output_resampled_SFC_path,desired_length)
 }
+

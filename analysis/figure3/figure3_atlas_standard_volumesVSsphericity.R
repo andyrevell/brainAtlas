@@ -9,8 +9,17 @@ library("cowplot")
 
 data_volumes = read.csv("01_atlas_volumes.csv", stringsAsFactors = F, header = T)
 data_sphericity = read.csv("02_atlas_sphericity.csv", stringsAsFactors = F, header = T)
-standard_major_atlas_index = c(1:15)
-random_atlas_index = c(16:23)
+
+
+random_atlases_to_plot = c('RA_N0075','RA_N0100','RA_N0200','RA_N0300','RA_N0400','RA_N0500','RA_N1000','RA_N2000','RA_N5000')
+standard_atlases_to_plot = c('AAL',	'AAL600',	'JHU',	'CPAC',	'DKT',	'Schaefer0100',	'Schaefer0200',	'Schaefer0300',	'Schaefer0400',	'Schaefer1000',	'Talairach',	'Yeo07',	'Yeo17',	'Desikan',	'Glasser')
+
+standard_atlases_legend = c('AAL',	'AAL600',	'JHU',	'CPAC',	'DKT',	'Schaefer0100',	'Schaefer0200',	'Schaefer0300',	'Schaefer0400',	'Schaefer1000',	'Talairach',	'Yeo07',	'Yeo17',	'Desikan',	'Glasser')
+random_atlases_legend = c('75', '100','200', '300', '400', '500','1000', '2000','5000')
+
+standard_major_atlas_index = match( standard_atlases_to_plot,names(data_volumes))
+random_atlas_index = match( random_atlases_to_plot,names(data_volumes))
+
 
 data_volumes = log10(data_volumes)
 
@@ -31,9 +40,14 @@ volumes_save_data = matrix(NA, nrow = length(names(data_volumes)), ncol = 1 )
 volumes_save_data[,1] = unlist(mean_volumes)
 volumes_save_data = data.frame(volumes_save_data)
 
-row.names(volumes_save_data) = names(data_volumes)
-write.table(volumes_save_data,paste0(save_data_directory, "/mean_volumes.csv"), row.names = T, col.names=FALSE, sep = ",")
+sphericity_save_data = matrix(NA, nrow = length(names(data_volumes)), ncol = 1 )
+sphericity_save_data[,1] = unlist(mean_sphericity)
+sphericity_save_data = data.frame(sphericity_save_data)
 
+row.names(volumes_save_data) = names(data_volumes)
+row.names(sphericity_save_data) = names(data_volumes)
+write.table(volumes_save_data,paste0(save_data_directory, "/mean_volumes.csv"), row.names = T, col.names=FALSE, sep = ",")
+write.table(volumes_save_data,paste0(save_data_directory, "/mean_sphericity.csv"), row.names = T, col.names=FALSE, sep = ",")
 
 ##########################################################################################################################################
 #Standard Major Atlases
@@ -68,9 +82,9 @@ start = 0
 pch = start:(start+ncol(data_volumes))
 
 
-color_standard = rainbow(length(standard_major_atlas_index), s = 0.8, v = 0.9, start = 0, alpha = 0.4)
+color_standard = rainbow(15, s = 0.8, v = 0.9, start = 0, alpha = 0.4)
 random_atlas_colors =  paste0(colorRampPalette(c("#0000ff", "#990099"))(4), "66")
-random_atlas_colors =  rainbow(length(random_atlas_index), s = 0.9, v = 0.9, start = 0.0, end = 0.85, alpha = 0.2)
+random_atlas_colors =  rainbow(length(random_atlases_to_plot), s = 0.9, v = 0.9, start = 0.00, end = 0.90, alpha = 0.2)
 
 colors = c(color_standard, random_atlas_colors)
 par(new = F)
@@ -213,7 +227,7 @@ plot(unlist(mean_volumes[index]),  unlist(mean_sphericity[index]),
 #par(fig=c(cutoffs[1],1,cutoffs[2],1), new=T)
 
 
-legend(x = "bottomleft", legend = gsub("[.]", "=",  names(data_volumes))[index], 
+legend(x = "bottomleft", legend =standard_atlases_legend, 
        col = substr(colors[index],1,7),
        bty = "n", cex= 0.7, pch = pch , xpd = T,
        y.intersp = 0.8, adj=0)
@@ -232,7 +246,6 @@ legend(x = "bottomleft", legend = gsub("[.]", "=",  names(data_volumes))[index],
 
 
 index= random_atlas_index
-lim_vol = c(0,5)
 ylim = c(0,20e-0)
 lim_sphericity = c(0.0,0.8)
 #pdf(paste0(github_directory, "figure3/atlas_random_volumesVSsphericity.pdf"), width = 7, height = 7)
@@ -258,10 +271,12 @@ cutoffs = c(0.5,0.75)
 par(fig=c(0.5,0.95,0.5,0.75), new=T)
 xlim = lim_vol
 ylim = density_lim
+count = 1
 for (i in index){
   d <- density(data_list_volumes[[i]] )
   plot(d,  xlim = xlim, ylim= ylim, xlab = "", ylab = "", axes=FALSE, main = "", zero.line = F)
-  polygon(d, col=colors[i], border=colors[i])
+  polygon(d, col=random_atlas_colors[count], border=random_atlas_colors[count])
+  count =  count + 1
   par(new = T)
 }
 mtext("Random Atlases:\nVolumes vs Sphericity", side = 3, outer = F, line = -4.5 , font = 3, cex = 1.3)
@@ -276,6 +291,7 @@ mar[3] = 0
 par(mar = mar)
 xlim = lim_sphericity
 ylim = c(0,30)
+count =  1
 for (i in index){
   
   d <- density(data_list_sphericity[[i]] )
@@ -283,7 +299,8 @@ for (i in index){
   e$x = d$y
   e$y = d$x
   plot(e,  xlim = (ylim), ylim= (xlim), xlab = "", ylab = "", axes=FALSE, main = "", zero.line = F)
-  polygon(e, col=colors[i], border=colors[i])
+  polygon(e, col=random_atlas_colors[count], border=random_atlas_colors[count])
+  count =  count + 1
   par(new = T)
 }
 
@@ -296,13 +313,16 @@ mar[2] = mar_2
 par(mar = mar)
 xlim = lim_vol
 ylim = lim_sphericity
+count =  1
+pch_count = 0
 for (i in index){
   
   x = data_list_volumes[[i]]
   y = data_list_sphericity[[i]]
   plot(x,y,  xlim = xlim, ylim = ylim, 
-       col = colors[i], pch = pch[i], cex = 0.5,
+       col = random_atlas_colors[count], pch = (pch_count+count-1), cex = 0.5,
        xlab = "", ylab = "", axes=FALSE, main = "")
+  count =  count + 1
   par(new = T)
 }
 box()
@@ -321,7 +341,7 @@ title(ylab = "Sphericity",line = 2.5, font.lab = 1, cex.lab = 1.0)
 
 par(new = T)
 plot(unlist(mean_volumes[index]),  unlist(mean_sphericity[index]),
-     col = "black",  bg =substr(colors[index],1,7),  xlim = xlim, ylim = ylim,
+     col = "black",  bg =substr(random_atlas_colors,1,7),  xlim = xlim, ylim = ylim,
      xlab = "", ylab = "", axes=FALSE, main = "", cex = 1.8,
      pch = pch)
 
@@ -329,8 +349,8 @@ plot(unlist(mean_volumes[index]),  unlist(mean_sphericity[index]),
 #par(fig=c(cutoffs[1],1,cutoffs[2],1), new=T)
 
 
-legend(x = "bottomleft", legend = gsub("[.]", "=",  names(data_volumes))[index], 
-       col = substr(colors[index],1,7),
+legend(x = "bottomleft", legend = random_atlases_legend, 
+       col = substr(random_atlas_colors,1,7),
        bty = "n", cex= 0.7, pch = pch , xpd = T,
        y.intersp = 0.8, adj=0)
 
