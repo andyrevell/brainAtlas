@@ -8,32 +8,34 @@ setwd(output_directory)
 
 options(scipen=999)#prevent scientifuc notation. iEEG org times are very long, so helps when reading files to read the number string verbatim
 
-#sub_ID='RID0194'; iEEG_filename = 'HUP134_phaseII_D02'; interictal_time = c(157702933433,	157882933433); preictal_time = c(179223935812,	179302933433); ictal_time = c(179302933433,	179381931054); postictal_time = c(179381931054,	179561931054)
+for (z in 9:20){
+  if (z == 1){sub_ID='RID0194'; iEEG_filename = 'HUP134_phaseII_D02'; interictal_time = c(157702933433,	157882933433); preictal_time = c(179223935812,	179302933433); ictal_time = c(179302933433,	179381931054); postictal_time = c(179381931054,	179561931054)}
 
-#sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; interictal_time = c(226925740000,	227019140000); preictal_time = c(248432340000,	248525740000); ictal_time = c(248525740000,	248619140000); postictal_time = c(248619140000,	248799140000)
-#sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; interictal_time = c(317408330000,	317568440000); preictal_time = c(338848220000,	339008330000); ictal_time = c(339008330000,	339168440000); postictal_time = c(339168440000,	339348440000)
-#sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; interictal_time = c(394423190000,	394512890000); preictal_time = c(415933490000,	416023190000); ictal_time = c(416023190000,	416112890000); postictal_time = c(416112890000,	416292890000)
-#sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; interictal_time = c(407898590000,	407998350000); preictal_time = c(429398830000,	429498590000); ictal_time = c(429498590000,	429598350000); postictal_time = c(429598350000,	429778350000)
-#sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; interictal_time = c(436904560000,	437015820000); preictal_time = c(458393300000,	458504560000); ictal_time = c(458504560000,	458615820000); postictal_time = c(458615820000,	458795820000)
+  if (z == 2){sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; interictal_time = c(226925740000,	227019140000); preictal_time = c(248432340000,	248525740000); ictal_time = c(248525740000,	248619140000); postictal_time = c(248619140000,	248799140000)}
+  if (z == 3){sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; interictal_time = c(317408330000,	317568440000); preictal_time = c(338848220000,	339008330000); ictal_time = c(339008330000,	339168440000); postictal_time = c(339168440000,	339348440000)}
+  if (z == 4){sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; interictal_time = c(394423190000,	394512890000); preictal_time = c(415933490000,	416023190000); ictal_time = c(416023190000,	416112890000); postictal_time = c(416112890000,	416292890000)}
+  if (z == 5){sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; interictal_time = c(407898590000,	407998350000); preictal_time = c(429398830000,	429498590000); ictal_time = c(429498590000,	429598350000); postictal_time = c(429598350000,	429778350000)}
+  if (z == 6){sub_ID='RID0278'; iEEG_filename = 'HUP138_phaseII'; interictal_time = c(436904560000,	437015820000); preictal_time = c(458393300000,	458504560000); ictal_time = c(458504560000,	458615820000); postictal_time = c(458615820000,	458795820000)}
 
 
-#sub_ID='RID0309'; iEEG_filename = 'HUP151_phaseII'; interictal_time = c(473176000000,	473250000000); preictal_time = c(494702000000,	494776000000); ictal_time = c(494776000000,	494850000000); postictal_time = c(494850000000,	495030000000)
-#sub_ID='RID0309'; iEEG_filename = 'HUP151_phaseII'; interictal_time = c(508411424682,	508484532533); preictal_time = c(529938316831,	530011424682); ictal_time = c(530011424682,	530084532533); postictal_time = c(530084532533,	530264532533)
+  if (z == 7){sub_ID='RID0309'; iEEG_filename = 'HUP151_phaseII'; interictal_time = c(473176000000,	473250000000); preictal_time = c(494702000000,	494776000000); ictal_time = c(494776000000,	494850000000); postictal_time = c(494850000000,	495030000000)}
+  if (z == 8){sub_ID='RID0309'; iEEG_filename = 'HUP151_phaseII'; interictal_time = c(508411424682,	508484532533); preictal_time = c(529938316831,	530011424682); ictal_time = c(530011424682,	530084532533); postictal_time = c(530084532533,	530264532533)}
 
-#sub_ID='RID0320'; iEEG_filename = 'HUP140_phaseII_D02'; interictal_time = c(310379921071,	310559921071); preictal_time = c(331624747156,	331979921071); ictal_time = c(331979921071,	332335094986); postictal_time = c(332335094986,	332635094986)
-#sub_ID='RID0320'; iEEG_filename = 'HUP140_phaseII_D02'; interictal_time = c(318928040025,	319108040025); preictal_time = c(340243011431,	340528040025); ictal_time = c(340528040025,	340813068619); postictal_time = c(340813068619,	341113068619)
-#sub_ID='RID0320'; iEEG_filename = 'HUP140_phaseII_D02'; interictal_time = c(302115130000,	302295130000); preictal_time = c(344266714798, 344573548935); ictal_time = c(344573548935,	344880383072); postictal_time = c(344880383072,	345180383072)
+  #if (z == 9){sub_ID='RID0320'; iEEG_filename = 'HUP140_phaseII_D02'; interictal_time = c(310379921071,	310559921071); preictal_time = c(331624747156,	331979921071); ictal_time = c(331979921071,	332335094986); postictal_time = c(332335094986,	332635094986)}
+  if (z == 9){sub_ID='RID0320'; iEEG_filename = 'HUP140_phaseII_D02'; interictal_time = c(310399132626,	310579132626); preictal_time = c(331624747156,	331979921071); ictal_time = c(331979921071,	332335094986); postictal_time = c(332335094986,	332635094986)}#####
+  if (z == 10){sub_ID='RID0320'; iEEG_filename = 'HUP140_phaseII_D02'; interictal_time = c(318928040025,	319108040025); preictal_time = c(340243011431,	340528040025); ictal_time = c(340528040025,	340813068619); postictal_time = c(340813068619,	341113068619)}
+  if (z == 11){sub_ID='RID0320'; iEEG_filename = 'HUP140_phaseII_D02'; interictal_time = c(302115130000,	302295130000); preictal_time = c(344266714798, 344573548935); ictal_time = c(344573548935,	344880383072); postictal_time = c(344880383072,	345180383072)}
 
-sub_ID='RID0440'; iEEG_filename = 'HUP172_phaseII'; interictal_time = c(356850680000,	356903099171); preictal_time = c(402651841658,	402704260829); ictal_time = c(402704260829,	402756680000 ); postictal_time = c(402756680000,	402936680000)
-sub_ID='RID0440'; iEEG_filename = 'HUP172_phaseII'; interictal_time = c(367346290000, 367406750000); preictal_time = c(408637470000, 408697930000); ictal_time = c(408697930000, 408758390000); postictal_time = c(408758390000, 408938390000)
-sub_ID='RID0440'; iEEG_filename = 'HUP172_phaseII'; interictal_time = c(565390000000, 565452288685); preictal_time = c(586927711315, 586990000000); ictal_time = c(586990000000, 587052288685); postictal_time = c(587052288685, 587232288685)
-sub_ID='RID0440'; iEEG_filename = 'HUP172_phaseII'; interictal_time = c(643376000000, 643427219061); preictal_time = c(664924780939, 664976000000); ictal_time = c(664976000000, 665027219061); postictal_time = c(665027219061, 665207219061)
-sub_ID='RID0440'; iEEG_filename = 'HUP172_phaseII'; interictal_time = c(671279000000, 671337000000); preictal_time = c(692821000000, 692879000000); ictal_time = c(692879000000, 692937000000); postictal_time = c(692937000000, 693117000000)
+  if (z == 12){sub_ID='RID0440'; iEEG_filename = 'HUP172_phaseII'; interictal_time = c(356850680000,	356903099171); preictal_time = c(402651841658,	402704260829); ictal_time = c(402704260829,	402756680000 ); postictal_time = c(402756680000,	402936680000)}
+  if (z == 13){sub_ID='RID0440'; iEEG_filename = 'HUP172_phaseII'; interictal_time = c(367346290000, 367406750000); preictal_time = c(408637470000, 408697930000); ictal_time = c(408697930000, 408758390000); postictal_time = c(408758390000, 408938390000)}
+  if (z == 14){sub_ID='RID0440'; iEEG_filename = 'HUP172_phaseII'; interictal_time = c(565390000000, 565452288685); preictal_time = c(586927711315, 586990000000); ictal_time = c(586990000000, 587052288685); postictal_time = c(587052288685, 587232288685)}
+  if (z == 15){sub_ID='RID0440'; iEEG_filename = 'HUP172_phaseII'; interictal_time = c(643376000000, 643427219061); preictal_time = c(664924780939, 664976000000); ictal_time = c(664976000000, 665027219061); postictal_time = c(665027219061, 665207219061)}
+  if (z == 16){sub_ID='RID0440'; iEEG_filename = 'HUP172_phaseII'; interictal_time = c(671279000000, 671337000000); preictal_time = c(692821000000, 692879000000); ictal_time = c(692879000000, 692937000000); postictal_time = c(692937000000, 693117000000)}
 
-#sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; interictal_time = c(63129090000,	63309090000); preictal_time = c(84609521985,	84729094008); ictal_time = c(84729094008,	84848666031 ); postictal_time = c(84848666031,	85028666031)
-#sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; interictal_time = c(152892270000,	153072270000); preictal_time = c(164626956810,	164694572385); ictal_time = c(164694572385,	164762187960 ); postictal_time = c(164762187960,	164942187960)
-#sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; interictal_time = c(237460640000,	237640640000); preictal_time = c(250573896890,	250710930770); ictal_time = c(250710930770,	250847964650 ); postictal_time = c(250847964650,	251027964650)
-#sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; interictal_time = c(269881750000,	270061750000); preictal_time = c(286753301266,	286819539584); ictal_time = c(286819539584,	286885777902 ); postictal_time = c(286885777902,	287065777902)
+  if (z == 17){sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; interictal_time = c(63129090000,	63309090000); preictal_time = c(84609521985,	84729094008); ictal_time = c(84729094008,	84848666031 ); postictal_time = c(84848666031,	85028666031)}
+  if (z == 18){sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; interictal_time = c(152892270000,	153072270000); preictal_time = c(164626956810,	164694572385); ictal_time = c(164694572385,	164762187960 ); postictal_time = c(164762187960,	164942187960)}
+  if (z == 19){sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; interictal_time = c(237460640000,	237640640000); preictal_time = c(250573896890,	250710930770); ictal_time = c(250710930770,	250847964650 ); postictal_time = c(250847964650,	251027964650)}
+  if (z == 20){sub_ID='RID0536'; iEEG_filename = 'HUP195_phaseII_D01'; interictal_time = c(269881750000,	270061750000); preictal_time = c(286753301266,	286819539584); ictal_time = c(286819539584,	286885777902 ); postictal_time = c(286885777902,	287065777902)}
 
 
 
@@ -55,6 +57,7 @@ for (a in 1:(length(atlases))){
   
   
   for (p in 1:(length(perm))){
+    print(paste0(sub_ID, " Atlas ", atlas_folder, " perm ", p) )
     data_interictal_file_name = paste0('sub-', sub_ID, '_' , iEEG_filename, '_', interictal_time[1], '_', interictal_time[2], '_', atlas_folder, '_Perm', sprintf('%04d',perm[p]),'_correlation.pickle')
     data_preictal_file_name = paste0('sub-', sub_ID, '_' , iEEG_filename, '_', preictal_time[1], '_', preictal_time[2], '_', atlas_folder, '_Perm', sprintf('%04d',perm[p]),'_correlation.pickle')
     data_ictal_file_name = paste0('sub-', sub_ID, '_' , iEEG_filename, '_', ictal_time[1], '_', ictal_time[2], '_', atlas_folder ,'_Perm', sprintf('%04d',perm[p]),'_correlation.pickle')
@@ -204,7 +207,7 @@ for (a in 1:(length(atlases))){
 atlases=c('aal_res-1x1x1', 'AAL600', 'CPAC200_res-1x1x1', 'desikan_res-1x1x1','DK_res-1x1x1','JHU_res-1x1x1',
           'Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm', 'Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm',
           'Schaefer2018_300Parcels_17Networks_order_FSLMNI152_1mm' , 'Schaefer2018_400Parcels_17Networks_order_FSLMNI152_1mm', 
-          'Schaefer2018_1000Parcels_17Networks_order_FSLMNI152_1mm', 'Talairach_res-1x1x1')
+          'Schaefer2018_1000Parcels_17Networks_order_FSLMNI152_1mm', 'Talairach_res-1x1x1', 'JHU_aal_combined_res-1x1x1')
 #initialize matrices to store all data for each atlas in a list
 all_data_standard_atlases = vector(mode = "list", length = length(atlases))
 names(all_data_standard_atlases) = atlases
@@ -257,6 +260,6 @@ save(all_data_random_atlases, all_data_standard_atlases, file = paste0(output_di
 
 
 
-
+}
 
 

@@ -47,24 +47,39 @@ with open(outputfile, 'rb') as f: data, fs = pickle.load(f)
 from ieeg.auth import Session
 import pandas as pd
 import pickle
+import numpy as np
 
 def get_iEEG_data(username, password, iEEG_filename, start_time_usec, stop_time_usec, ignore_electrodes, outputfile):
-    print("\n\nGetting data from iEEG.org:")
+    print("\nGetting data from iEEG.org:")
     print("iEEG_filename: {0}".format(iEEG_filename))
     print("start_time_usec: {0}".format(start_time_usec))
     print("stop_time_usec: {0}".format(stop_time_usec))
     print("ignore_electrodes: {0}".format(ignore_electrodes))
-    print("Saving to: {0}".format(outputfile))
     start_time_usec = int(start_time_usec)
     stop_time_usec = int(stop_time_usec)
     duration = stop_time_usec - start_time_usec
     s = Session(username, password)
     ds = s.open_dataset(iEEG_filename)
     channels = list(range(len(ds.ch_labels)))
-    data = ds.get_data(start_time_usec, duration, channels)
+    fs = ds.get_time_series_details(ds.ch_labels[0]).sample_rate #get sample rate
+    
+    #if duration is greater than ~10 minutes, then break up the API request to iEEG.org. 
+    #The server blocks large requests, so the below code breaks up the request and 
+    #concatenates the data
+    server_limit_minutes = 10
+    if duration < server_limit_minutes*60*1e6:
+        data = ds.get_data(start_time_usec, duration, channels)
+    if duration >= server_limit_minutes*60*1e6:
+        break_times = np.ceil(np.linspace(start_time_usec, stop_time_usec, num=int(np.ceil(duration/(server_limit_minutes*60*1e6))+1), endpoint=True))
+        break_data = np.zeros(shape = (int(np.ceil(duration/1e6*fs)), len(channels)))#initialize
+        print("breaking up data request from server because length is too long")
+        for i in range(len(break_times)-1):
+            print("{0}/{1}".format(i+1, len(break_times)-1))
+            break_data[range(int( np.ceil((break_times[i]-break_times[0])/1e6*fs) ), int(  np.ceil((break_times[i+1]- break_times[0])/1e6*fs) )  ),:] = ds.get_data(break_times[i], break_times[i+1]-break_times[i], channels)
+        data = break_data
     df = pd.DataFrame(data, columns=ds.ch_labels)
     df = pd.DataFrame.drop(df, ignore_electrodes, axis=1)
-    fs = ds.get_time_series_details(ds.ch_labels[0]).sample_rate #get sample rate
+    print("Saving to: {0}".format(outputfile))
     with open(outputfile, 'wb') as f: pickle.dump([df, fs], f)
     print("...done\n")
 

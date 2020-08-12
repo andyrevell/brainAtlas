@@ -39,7 +39,7 @@ def by_atlas(electrode_coordinates_mni_path, atlas_path, mni_template_path, outp
     # getting imaging data
     img = nib.load(atlas_path)
     img_data = img.get_fdata()  # getting actual image data array
-    aff = img.affine  # get affine transformation in atals. Helps us convert real-world coordinates to voxel locations
+    #aff = img.affine  # get affine transformation in atals. Helps us convert real-world coordinates to voxel locations
 
     # read in the MNI
     aff_mni = nib.load(mni_template_path).affine
@@ -174,8 +174,24 @@ def distance_from_grayMatter(electrode_coordinates_mni_path, mni_template_path, 
 
     # Find distance to closest GM region
     # Classify 0 = inside GM.  -1 = outside brain. and float = distance.
+    
     # Please consider Gray matter in tissue_res-1x1x1 categories as a 1 or 2. WM = category 3. Outside brain = category 0
-    img_ROI = img_data[coordinates_voxels[:, 0] - 1, coordinates_voxels[:, 1] - 1, coordinates_voxels[:, 2] - 1]
+    try:
+        img_ROI = img_data[coordinates_voxels[:,0]-1, coordinates_voxels[:,1]-1, coordinates_voxels[:,2]-1]
+    except:
+        img_ROI = np.zeros((coordinates_voxels.shape[0],))
+        for i in range(0,coordinates_voxels.shape[0]):
+            if((coordinates_voxels[i,0]>img_data.shape[0]) or (coordinates_voxels[i,0]<1)):
+                img_ROI[i] = -1
+                print('Coordinate outside of MNI space: setting to zero')
+            elif((coordinates_voxels[i,1]>img_data.shape[1]) or (coordinates_voxels[i,1]<1)):
+                img_ROI[i] = -1 
+                print('Coordinate outside of MNI space: setting to zero')
+            elif((coordinates_voxels[i,2]>img_data.shape[2]) or (coordinates_voxels[i,2]<1)):
+                img_ROI[i] = -1   
+                print('Coordinate outside of MNI space: setting to zero')
+            else:
+                img_ROI[i] = img_data[coordinates_voxels[i,0]-1, coordinates_voxels[i,1]-1, coordinates_voxels[i,2]-1]
     img_ROI = np.reshape(img_ROI, [img_ROI.shape[0], 1])
     img_ROI[img_ROI == 0] = -1
     img_ROI[(img_ROI == 1) | (img_ROI == 2)] = 0

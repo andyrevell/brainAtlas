@@ -2,7 +2,7 @@
 #resampled_SFC_dir = "./resampled_SFC/max/"
 #output_path = "./resampled_SFC/averaged_resampled_data/max/averaged_resampled_max.RData"
 
-SFC_type = "decrease" #increase, decrease, all
+SFC_type = "increase" #increase, decrease, all
 #Andys Computer:
 resampled_SFC_dir = paste0("/Users/andyrevell/mount/USERS/arevell/papers/paper001/data_processed/figure6_data/average_SFC_ALL_PATIENTS/medians/", SFC_type, "/")
 output_path = paste0("/Users/andyrevell/mount/USERS/arevell/papers/paper001/data_processed/figure6_data/average_SFC_ALL_PATIENTS/averaged_resampled_data/medians/", SFC_type, "/averaged_resampled_data.RData")

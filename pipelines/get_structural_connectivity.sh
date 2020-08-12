@@ -20,25 +20,17 @@ dsi_studio --action=rec --source=${dwi}.src.gz --method=4 --param0=1.25
 
 echo "Generating Tractography and Connectivity Matrix \n"
 #Generating track file AND connectivity matrix with user-input atlas
-#We found the parameters manually by using the dsi_studio GUI, uploading out imaganing, creating src files, and doing the tracktography with our parameters changed into the GUI (parameters are followed from Preya Shah et. al 2019 Brain journal). DSI studio outputs a long hash for the parameters we used, and this has is what is below. 
+#We found the parameters manually by using the dsi_studio GUI. 
+#With the GUI, we created src and tracktography files with the parameters followed from Preya Shah et. al 2019 Brain journal. 
+#DSI GUI studio outputs a long hash for the parameters we used, and this has is what is below. 
 dsi_studio --action=trk --source=${dwi}.src.gz.odf8.f5.bal.012fy.rdi.gqi.1.25.fib.gz --parameter_id=7C1D393C9A99193FF3B3513Fb803Fcb2041bC84340420Fca01cbaCDCC4C3Ec --output=${dwi}.trk.gz --connectivity=${atlas} --connectivity_type=pass --connectivity_threshold=0
 
-#mv ${dwi}.* ${tmp}
-#mv ${tmp}/*.connectivity.mat ${tmp}/..
 
-mv ${dwi}*connectivity.* ${tmp}/.. 
-mv ${dwi}*network_measures.* ${tmp}/
-
-#mv ${dwi}*src.gz.* ${tmp}/
+#mv ${dwi}*connectivity.* ${tmp}/.. 
+#mv ${dwi}*network_measures.* ${tmp}/
 
 
-
-
-
-#removing src and trk file because it is very large
-#rm ${tmp}/*.src.gz
-#rm ${tmp}/*.trk.gz
-
+#Created in summer 2019. Updated August 10th 2020
 
 
 #Some parameters examples:

@@ -6,8 +6,9 @@ library(ggplot2)
 library(ggpubr)
 library("cowplot")
 
-fname = paste0(output_directory, "/figure4_network_measures.pdf")
+fname = paste0(output_directory, "/figure4_network_measures_presentation01.pdf")
 pdf(fname , width = 7, height = 8)
+plot_standard = F #indicate whether or not to plot the standard atlases
 
 #Random Atlases
 data_random = read.csv(paste0(data_directory,"/network_measures_random_atlases.csv"), stringsAsFactors = F, header = T)
@@ -173,8 +174,9 @@ par(new = T)
 plot(x = means_by_subject$Group.1, y = means_by_subject$Degree, xlab = "", ylab = "", las = las, xaxt = "n", yaxt = "n",
      xlim = xlim, ylim = ylim, pch = pch, col = color, cex = pch_cex)
 par(new = T)
-plot(x = means_by_subject_standard$Group.1, y = means_by_subject_standard$Degree, xlab = "", ylab = "", las = las, xaxt = "n",  yaxt = "n",
+if (plot_standard){plot(x = means_by_subject_standard$Group.1, y = means_by_subject_standard$Degree, xlab = "", ylab = "", las = las, xaxt = "n",  yaxt = "n",
      xlim = xlim, ylim = ylim, pch = means_by_subject_standard$Group.5, cex = pch_cex_standard, col =means_by_subject_standard$Group.4 )
+}
 text(par("usr")[2]*offset_x_corner_text_label, par("usr")[4]*offset_y_corner_text_label, labels = "Degree",adj = c(1,1) , cex = cex_corner_text_label)
 #title(ylab = "Degree", cex.lab = cex_ylab, line = y_label_line )
 axis(side=1, at= means$Group.1, labels = FALSE, tck = tick )
@@ -191,8 +193,9 @@ par(new = T)
 plot(x = means_by_subject$Group.1, y = means_by_subject$Small.Worldness, xlab = "", ylab = "", las = las, xaxt = "n", yaxt = "n",
      xlim = xlim, ylim = ylim, pch = pch, col = color, cex = pch_cex)
 par(new = T)
-plot(x = means_by_subject_standard$Group.1, y = means_by_subject_standard$Small.Worldness, xlab = "", ylab = "", las = las, xaxt = "n", yaxt = "n",
+if (plot_standard){plot(x = means_by_subject_standard$Group.1, y = means_by_subject_standard$Small.Worldness, xlab = "", ylab = "", las = las, xaxt = "n", yaxt = "n",
      xlim = xlim, ylim = ylim, pch = means_by_subject_standard$Group.5, cex = pch_cex_standard, col =means_by_subject_standard$Group.4)
+}
 text(par("usr")[2]*offset_x_corner_text_label, par("usr")[4]*offset_y_corner_text_label, labels = "Small\nWorldness",adj = c(1,1) , cex = cex_corner_text_label)
 #title(ylab = "Small Worldness", cex.lab = cex_ylab, line = y_label_line -0.5)
 axis(side=1, at= means$Group.1, labels = FALSE, tck = tick)
@@ -209,8 +212,9 @@ par(new = T)
 plot(x = means_by_subject$Group.1, y = means_by_subject$Norm.Clust, xlab = "", ylab = "", las = las, xaxt = "n",yaxt = "n",
      xlim = xlim, ylim = ylim, pch = pch, col = color, cex = pch_cex)
 par(new = T)
-plot(x = means_by_subject_standard$Group.1, y = means_by_subject_standard$Norm.Clust, xlab = "", ylab = "", las = las, xaxt = "n", yaxt = "n",
+if (plot_standard){plot(x = means_by_subject_standard$Group.1, y = means_by_subject_standard$Norm.Clust, xlab = "", ylab = "", las = las, xaxt = "n", yaxt = "n",
      xlim = xlim, ylim = ylim, pch = means_by_subject_standard$Group.5, cex = pch_cex_standard, col =means_by_subject_standard$Group.4)
+}
 #title(ylab = "Clustering Coefficient", cex.lab = cex_ylab, line = y_label_line )
 axis(side=3, at= means$Group.1, labels = FALSE, tck = tick)
 text(par("usr")[2]*offset_x_corner_text_label, par("usr")[4]*offset_y_corner_text_label, labels = "Clustering\nCoefficient",adj = c(1,1) , cex = cex_corner_text_label)
@@ -230,8 +234,9 @@ par(new = T)
 plot(x = means_by_subject$Group.1, y = means_by_subject$Norm.Char.Path, xlab = "", ylab = "", las = las, xaxt = "n", yaxt = "n",
      xlim = xlim, ylim = ylim, pch = pch, col = color, cex = pch_cex)
 par(new = T)
-plot(x = means_by_subject_standard$Group.1, y = means_by_subject_standard$Norm.Char.Path, xlab = "", ylab = "", las = las, xaxt = "n", yaxt = "n",
+if (plot_standard){plot(x = means_by_subject_standard$Group.1, y = means_by_subject_standard$Norm.Char.Path, xlab = "", ylab = "", las = las, xaxt = "n", yaxt = "n",
      xlim = xlim, ylim =ylim, pch = means_by_subject_standard$Group.5, cex = pch_cex_standard, col =means_by_subject_standard$Group.4)
+}
 #title(ylab = "Characteristic Path Length", cex.lab = cex_ylab, line = y_label_line-0.5 )
 axis(side=3, at= means$Group.1, labels =F , tck = tick )
 text(par("usr")[2]*offset_x_corner_text_label, par("usr")[4]*offset_y_corner_text_label*1.05, labels = "Characteristic\nPath\nLength",adj = c(1,1) , cex = cex_corner_text_label)
