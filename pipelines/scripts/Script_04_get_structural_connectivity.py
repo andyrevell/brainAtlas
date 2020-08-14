@@ -29,16 +29,15 @@ python3.6 Script_04_get_structural_connectivity.py
 #%%
 import sys
 import os
-sys.path.append("..")
 import pandas as pd
-
 #%% Paths and File names
-path_paper = "../../.."
-inputfile_EEG_times = os.path.join( path_paper, "data_raw/iEEG_times/EEG_times.xlsx")
-inputpath_dwi = os.path.join( path_paper, "data_raw/imaging")
+
+inputfile_EEG_times = "data_raw/iEEG_times/EEG_times.xlsx"
+inputpath_dwi =  "data_raw/imaging"
+outputpath_tractography = "data_processed/tractography"
 
 #may not be applicable if DSI Studio is already on your $PATH environment
-dsi_studio_path = "." # On a Mac: "/Applications/dsi_studio.app/Contents/MacOS/"
+dsi_studio_path = "/Applications/dsi_studio.app/Contents/MacOS/" # On a Mac: "/Applications/dsi_studio.app/Contents/MacOS/"
 
                              
 #%%Load Data
@@ -51,7 +50,9 @@ for i in range(len(data)):
     inputfile_dwi =    "sub-{0}_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz".format(sub_ID) 
     inputfile_dwi_fullpath = os.path.join(inputpath_dwi,"sub-{0}".format(sub_ID), inputfile_dwi)
     input_name = os.path.splitext(os.path.splitext(inputfile_dwi)[0])[0]
-    output_src = "{0}.src.gz".format(input_name)
+    outputpath_tractography_sub_ID = os.path.join(outputpath_tractography, "sub-{0}".format(sub_ID))
+    if not (os.path.isdir(outputpath_tractography_sub_ID)): os.mkdir(outputpath_tractography_sub_ID)
+    output_src =  os.path.join(outputpath_tractography, "sub-{0}".format(sub_ID), "{0}.src.gz".format(input_name))
     
     if (os.path.exists(output_src)):
         print("Source file already exists: {0}".format(output_src))
@@ -61,7 +62,7 @@ for i in range(len(data)):
         os.system(cmd)
         print("Creating Reconstruction File in DSI Studio")
         cmd = "{0}/dsi_studio --action=rec --source={1} --method=4 --param0=1.25".format(dsi_studio_path, output_src)
-        
+        os.system(cmd)
        
 
 #%%

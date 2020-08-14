@@ -29,15 +29,14 @@ python3.6 Script_01_get_iEEG_data_RID0440.py 'username' 'password'
 #%%
 import sys
 import os
-sys.path.append("..")
-sys.path.append("../ieegpy/")
+sys.path.append("paper001/pipelines")
+sys.path.append("paper001/pipelines/ieegpy")
 from get_iEEG_data import get_iEEG_data
 import pandas as pd
 
 #%% Paths and File names
-path_paper = "../../.."
-inputfile_EEG_times = os.path.join( path_paper, "data_raw/iEEG_times/EEG_times.xlsx")
-outputpath_EEG = os.path.join( path_paper, "data_raw/EEG")
+inputfile_EEG_times = "data_raw/iEEG_times/EEG_times.xlsx"
+outputpath_EEG = "data_raw/EEG"
 
                               
 #%% Load username and password input
