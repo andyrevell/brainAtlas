@@ -37,7 +37,7 @@ import pandas as pd
 inputfile_EEG_times = ospj(path, "data_raw/iEEG_times/EEG_times.xlsx")
 
 inputpath_EEG = ospj(path, "data_raw/EEG")
-outputpath_FC = ospj(path, "data_raw/adjacency_matrices/function")
+outputpath_FC = ospj(path, "data_processed/connectivity_matrices/function")
 
 
                              
