@@ -19,24 +19,25 @@ Saves EEG timeseries in specified output directors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Example:
 
-python3.6 Script_01_get_iEEG_data_RID0440.py 'username' 'password'
+python3.6 Script_01_download_iEEG_data.py 'username' 'password'
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
 
-#assumes current working directory is scripts directory
 #%%
+path = "/mnt"
 import sys
 import os
-sys.path.append("paper001/pipelines")
-sys.path.append("paper001/pipelines/ieegpy")
-from get_iEEG_data import get_iEEG_data
+from os.path import join as ospj
+sys.path.append(ospj(path, "paper001/code/tools"))
+sys.path.append(ospj(path, "paper001/code/tools/ieegpy"))
+from download_iEEG_data import get_iEEG_data
 import pandas as pd
 
 #%% Paths and File names
-inputfile_EEG_times = "data_raw/iEEG_times/EEG_times.xlsx"
-outputpath_EEG = "data_raw/EEG"
+inputfile_EEG_times = ospj(path,"data_raw/iEEG_times/EEG_times.xlsx")
+outputpath_EEG = ospj(path,"data_raw/EEG")
 
                               
 #%% Load username and password input
@@ -57,7 +58,7 @@ for i in range(len(data)):
     stop_time_usec = int(data.iloc[i].connectivity_end_time_seconds*1e6)
     descriptor = data.iloc[i].descriptor
     #Output filename EEG
-    outputpath_EEG_sub_ID = os.path.join(outputpath_EEG, "sub-{0}".format(sub_ID))
+    outputpath_EEG_sub_ID = ospj(outputpath_EEG, "sub-{0}".format(sub_ID))
     if not (os.path.isdir(outputpath_EEG_sub_ID)): os.mkdir(outputpath_EEG_sub_ID)#if the path doesn't exists, then make the directory
     outputfile_EEG = "{0}/sub-{1}_{2}_{3}_{4}_EEG.pickle".format(outputpath_EEG_sub_ID, sub_ID, iEEG_filename, start_time_usec, stop_time_usec)
     print("\n\n\nID: {0}\nDescriptor: {1}".format(sub_ID, descriptor))
