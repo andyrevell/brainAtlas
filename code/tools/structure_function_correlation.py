@@ -17,10 +17,6 @@ import matplotlib.pyplot as plt
   
 def SFC(structure_file_path,function_file_path,electrode_localization_by_atlas_file_path, outputfile):
     
-    structure_file_path = './sub-RID0309_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.RA_N1000_Perm0001.count.pass.connectivity.mat'  
-    function_file_path = './sub-RID0309_HUP151_phaseII_529938316831_530011424682_functionalConnectivity.pickle'
-    electrode_localization_by_atlas_file_path = './sub-RID0309_electrode_coordinates_mni_RA_N1000_Perm0001.csv'
-    outputfile = './test.pickle'
     """
     :param structure_file_path:
     :param function_file_path:

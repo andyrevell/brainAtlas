@@ -21,8 +21,6 @@ python3.6 Script_06_structural_connectivity.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
-
-#assumes current working directory is scripts directory
 #%%
 path = "/mnt"
 import os
