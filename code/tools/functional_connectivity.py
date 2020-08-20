@@ -34,13 +34,11 @@ Output:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Example:
 
-inputfile = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/eeg/sub-RID0278_HUP138_phaseII_248432340000_248525740000_EEG.pickle'
-outputfile = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/connectivity_matrices/functional/sub-RID0278_HUP138_phaseII_248432340000_248525740000_functionalConnectivity.pickle'
+inputfile = '/mnt/data_raw/EEG/sub-RID0440/sub-RID0440_HUP172_phaseII_402524260829_402704260829_EEG.pickle'
+outputfile = '/mnt/data_processed/connectivity_matrices/function/sub-RID0440/sub-RID0440_HUP172_phaseII_402524260829_402704260829_functionalConnectivity.pickle'
 get_Functional_connectivity(inputfile,outputfile)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Please use this naming convention if data is from iEEG.org
-sub-RIDXXXX_iEEGFILENAME_STARTTIME_STOPTIME_functionalConnectivity.pickle
-example: 'sub-RID0278_HUP138_phaseII_248432340000_248525740000_functionalConnectivity.pickle'
+
 
 """
 from echobase import broadband_conn, multiband_conn
@@ -48,12 +46,6 @@ import numpy as np
 import pickle
 import pandas as pd
 
-""""
-Note on Pycharm users to import echobase:
-Right click the folder in which get_Functional_connectivity.py and echobase.py (MUST BE IN SAME DIRECTORY)
-Select "Mark Directory As" --> "Mark as Source Root" 
-Can also go to preferences --> Project structure to change source root 
-"""
 
 def get_Functional_connectivity(inputfile,outputfile):
     print("\nCalculating Functional Connectivity:")

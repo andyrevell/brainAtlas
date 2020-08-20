@@ -2,29 +2,47 @@
 2020.06.10
 Andy Revell
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Purpose: script to get electrode localization
+Purpose: 
+    1. This is a wrapper script: Runs through meta-data to automatically calculate for all data
+        Meta-data: data_raw/iEEG_times/EEG_times.xlsx
+    2. Get electrode localization: Find which region each electrode is in for each atlas
+    3. Calls electrode_localization.by_atlas in paper001/code/tools
+        See this function for more detail
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Logic of code:
+    1. Import appropriate tools 
+    2. Get appropriate input and output paths and file names
+    3. Setting appropriate parameters and preprocessing of data
+    4. Get electrode localization
+        1. Get electrode localization file for each patient
+        2. For standard atlases:
+            1. Get atlas image path
+            2. Call electrode_localization.by_atlas
+        3. For random atlases:
+            1. For each random atlas permutation
+                1. Get atlas image path
+                2. Call electrode_localization.by_atlas
+                
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Input:
-
+    None. This is a wrapper scipt that automatically runs based on meta-data file
+    Meta-data: data_raw/iEEG_times/EEG_times.xlsx
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Output:
-
+    Saves electrode localization by atlas for each patinet's electrode localization file 
+    in appropriate directory
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Example:
 
-python3.6 Script_02_electrode_localization.py
+    python3.6 Script_03_electrode_localization.py
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
-
-#assumes current working directory is scripts directory
 #%%
-path = "/mnt"
+path = "/mnt" #/mnt is the directory in the Docker or Singularity Continer where this study is mounted
 import sys
 import os
 from os.path import join as ospj
@@ -33,7 +51,7 @@ import electrode_localization
 import pandas as pd
 import numpy as np
 
-#%% Paths and File names
+#%% Input/Output Paths and File names
 ifname_EEG_times = ospj( path, "data_raw/iEEG_times/EEG_times.xlsx")
 ifname_MNI_template = ospj( path, "data_raw/MNI_brain_template/MNI152_T1_1mm_brain.nii.gz")
 ifpath_electrode_localization = ospj( path, "data_raw/electrode_localization")
@@ -44,15 +62,15 @@ ofpath_electrode_localization = ospj( path, "data_processed/electrode_localizati
 #%% Paramters
 #number of random atlas permutations to run on
 permutations = 30 
-#%% Load Data
+#%% Load Study Meta Data
 data = pd.read_excel(ifname_EEG_times)    
 
-#%% Processing Data: extracting sub-IDs
+#%% Processing Meta Data: extracting sub-IDs
 
 sub_IDs_unique = np.unique(data.RID)
 
 
-#%%
+#%% Get Electrode Localization. Find which region each electrode is in for each atlas
 for i in range(len(sub_IDs_unique)):
     #parsing data DataFrame to get iEEG information
     sub_ID = sub_IDs_unique[i]

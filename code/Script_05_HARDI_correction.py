@@ -2,49 +2,49 @@
 2020.06.10
 Andy Revell
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Purpose: script to get iEEG data in batches
+Purpose: 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Logic of code:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Input:
-  username: first argument. Your iEEG.org username
-  password: second argument. Your iEEG.org password
 
-  Reads data on which sub-IDs to download data from in data_raw/iEEG_times/EEG_times.xlsx
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Output:
-Saves EEG timeseries in specified output directors
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Example:
 
-python3.6 Script_05_tractography.py
+python3.6 Script_05_HARDI_correction.py
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
 #%%
-path = "/mnt"
+path = "/mnt" #/mnt is the directory in the Docker or Singularity Continer where this study is mounted
+import sys
 import os
 from os.path import join as ospj
+sys.path.append(ospj(path, "paper001/code/tools"))
 import pandas as pd
-import numpy as np
 #%% Paths and File names
 
-inputfile_EEG_times = ospj(path, "data_raw/iEEG_times/EEG_times.xlsx")
-inputpath_dwi =  ospj(path, "data_processed/imaging")
-outputpath_tractography = ospj(path, "data_processed/tractography")
+inputfile_EEG_times = ospj( path, "data_raw/iEEG_times/EEG_times.xlsx")
+inputpath_dwi =  "/mnt/data_processed/imaging"
+outputpath_tractography = "/mnt/data_processed/tractography"
+
+#may not be applicable if DSI Studio is already on your $PATH environment
+#dsi_studio_path = "." # On a Mac: "/Applications/dsi_studio.app/Contents/MacOS/"
+
                              
 #%%Load Data
 data = pd.read_excel(inputfile_EEG_times)    
 
-sub_ID_unique = np.unique(data.RID)
-
 #%%
-for i in range(len(sub_ID_unique)):
+for i in range(len(data)):
     #parsing data DataFrame to get iEEG information
-    sub_ID = sub_ID_unique[i]
+    sub_ID = data.iloc[i].RID
     print("\n\nSub-ID: {0}".format(sub_ID))
     inputfile_dwi =    "sub-{0}_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz".format(sub_ID) 
     inputfile_dwi_fullpath = os.path.join(inputpath_dwi,"sub-{0}".format(sub_ID), inputfile_dwi)

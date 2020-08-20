@@ -15,14 +15,14 @@ Output:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Example:
-    python3.6 Script_07_SFC.py
+    python3.6 Script_08_SFC.py
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """
 
 #%%
-path = "/mnt"
+path = "/mnt" #/mnt is the directory in the Docker or Singularity Continer where this study is mounted
 import sys
 import os
 from os.path import join as ospj

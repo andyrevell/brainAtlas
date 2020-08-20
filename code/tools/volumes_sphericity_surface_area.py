@@ -26,7 +26,6 @@ python3.6 Script_02_electrode_localization.py
 #%%
 path = "/mnt"
 import sys
-import os
 from os.path import join as ospj
 sys.path.append(ospj(path, "paper001/code/tools"))
 import nibabel as nib

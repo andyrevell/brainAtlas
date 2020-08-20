@@ -3,9 +3,9 @@
 Andy Revell
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Purpose:
-To get iEEG data from iEEG.org. Note, you must download iEEG python package from GitHub - instructions are below
-1. Gets time series data and sampling frequency information. Specified electrodes are removed.
-2. Saves as a pickle format
+    To get iEEG data from iEEG.org. Note, you must download iEEG python package from GitHub - instructions are below
+    1. Gets time series data and sampling frequency information. Specified electrodes are removed.
+    2. Saves as a pickle format
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Input
     username: your iEEG.org username
@@ -27,7 +27,7 @@ Output:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Example usage:
 
-username = 'arevell'
+username = 'username'
 password = 'password'
 iEEG_filename='HUP138_phaseII'
 start_time_usec = 248432340000
@@ -41,7 +41,7 @@ python3.6 -c 'import get_iEEG_data; get_iEEG_data.get_iEEG_data("arevell", "pass
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#How to get back pickled files
+#How to extract pickled files
 with open(outputfile, 'rb') as f: data, fs = pickle.load(f)
 """
 from ieeg.auth import Session
