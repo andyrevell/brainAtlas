@@ -2,17 +2,14 @@ path = "/Users/andyrevell/deepLearner/home/arevell/Documents/01_papers/paper001"
 
 ifpath_volumes = file.path(path, "data_processed/volumes_and_sphericity/volumes")
 ifpath_sphericity = file.path(path, "data_processed/volumes_and_sphericity/sphericity")
-ofpath_volumes_and_sphericity= file.path(path, "figures/volumes_and_sphericity")
+ofpath_volumes_and_sphericity= file.path(path, "paper001/figures/volumes_and_sphericity")
 
 setwd(path)
 library(ggplot2)
 library(ggpubr)
 library("cowplot")
 
-#pdf(paste0(figure_directory, "/figure3_atlas_standard_volumesVSsphericity.pdf"), width = 10, height = 7)
-
-
-
+pdf(file.path(ofpath_volumes_and_sphericity, "volumes_and_sphericity.pdf"), width = 10, height = 7)
 
 
 
@@ -34,18 +31,23 @@ for (i in 1:length(atlas_names)){
   }
 
 r = "RandomAtlas"
-random_atlases_to_plot = c(75, 100, 200, 300, 400, 500, 1000, 2000)
+random_atlases_to_plot = c(75, 100, 200, 300, 400, 500, 1000, 2000, 5000, 10000)
 standard_atlases_to_plot = c('aal_res-1x1x1',	'AAL600',	'JHU_res-1x1x1',	'CPAC200_res-1x1x1',	'DK_res-1x1x1',	
                              'Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm',	'Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm',	
                              'Schaefer2018_300Parcels_17Networks_order_FSLMNI152_1mm',	'Schaefer2018_400Parcels_17Networks_order_FSLMNI152_1mm',	
                              'Schaefer2018_1000Parcels_17Networks_order_FSLMNI152_1mm',	'Talairach_res-1x1x1',	'desikan_res-1x1x1')
 
 standard_atlases_legend = c('AAL',	'AAL600',	'JHU',	'CPAC',	'DKT',	'Schaefer0100',	'Schaefer0200',	'Schaefer0300',	'Schaefer0400',	'Schaefer1000',	'Talairach',		'Desikan')
-random_atlases_legend = c('75', '100','200', '300', '400', '500','1000', '2000')
-random_atlases_to_plot = paste0(r, sprintf("%04d", random_atlases_to_plot) )
+random_atlases_legend = c('75', '100','200', '300', '400', '500','1000', '2000', '5000', '10000')
+random_atlases_to_plot = paste0(r, sprintf("%07d", random_atlases_to_plot) )
+
+all_atlases_to_plot = c(standard_atlases_to_plot , random_atlases_to_plot)
 
 standard_major_atlas_index = match( standard_atlases_to_plot,names(data_volumes))
 random_atlas_index = match( random_atlases_to_plot,names(data_volumes))
+
+
+
 
 #taking log10 of volumes
 for (i in 1:length(data_volumes)){
@@ -91,6 +93,15 @@ lim_sphericity = c(0.0,0.8)
 
 
 
+
+
+
+
+
+
+
+
+
 ##########################################################################################################################################
 ##########################################################################################################################################
 ##########################################################################################################################################
@@ -104,8 +115,10 @@ pch = start:(start+length(data_volumes))
 
 color_standard = rainbow(length(standard_atlases_to_plot), s = 0.7, v = 0.9, start = 0, end = 0.9, alpha = 0.65)
 random_atlas_colors =  paste0(colorRampPalette(c("#0000ff", "#990099"))(4), "66")
-random_atlas_colors =  rainbow(length(random_atlases_legend), s = 0.7, v = 0.9, start = 0.00, end = 0.90, alpha = 0.3)
+random_atlas_colors =  rainbow(length(random_atlases_to_plot), s = 0.7, v = 0.9, start = 0.00, end = 0.90, alpha = 0.3)
 colors = c(color_standard, random_atlas_colors)
+
+
 
 
 par(new = F)
@@ -144,16 +157,14 @@ text(ltr_x - ltr_x*1.16 , ltr_y+ ltr_y*0.45  , labels = "A.", cex = 2, font = 2 
 
 par(new = T)
 #plotting example SPHERICTY distribution -  Schaefer1000, AAL CPAC, and Glasser:
-example_indx = which(colnames(data_sphericity) == "Schaefer1000")
-example_data = data_sphericity[[example_indx]]
 par(fig=c(0.5,0.95,0.75,0.92), new=T)
-for (i in 1:length(distributions_to_plot)){#SPHERICITY
-  example_indx = which(colnames(data_sphericity) == standard_atlases_to_plot[distributions_to_plot[i]])
+for (i in 1:length(distributions_to_plot_index)){#SPHERICITY
+  example_indx = which(names(data_sphericity) == standard_atlases_to_plot[distributions_to_plot_index[i]])
   example_data = data_sphericity[[example_indx]]
   par(new = T)
   d <- density(example_data )
   plot(d,  xlim = c(0,0.8), ylim= c(0,11), xlab = "", ylab = "", axes=T, main = "",  bty='n',  zero.line = F, las = 1, cex.axis = 0.8)
-  polygon(d, col=color_standard[example_indx], border=color_standard[example_indx])
+  polygon(d, col=color_standard[distributions_to_plot_index[i]], border=color_standard[distributions_to_plot_index[i]])
 
 }
 
@@ -188,7 +199,9 @@ ylim = density_lim
 for (i in index){
   d <- density(data_volumes[[i]] )
   plot(d,  xlim = xlim, ylim= ylim, xlab = "", ylab = "", axes=FALSE, main = "", zero.line = F)
-  polygon(d, col=colors[i], border=colors[i])
+  
+  color_index = which(names(data_volumes )[i] == all_atlases_to_plot)
+  polygon(d, col=colors[color_index], border=colors[color_index])
   par(new = T)
 }
 
@@ -211,7 +224,10 @@ for (i in index){
   e$x = d$y
   e$y = d$x
   plot(e,  xlim = (ylim), ylim= (xlim), xlab = "", ylab = "", axes=FALSE, main = "", zero.line = F)
-  polygon(e, col=colors[i], border=colors[i])
+  
+
+  color_index = which(names(data_volumes )[i] == all_atlases_to_plot)
+  polygon(e, col=colors[color_index], border=colors[color_index])
   par(new = T)
 }
 
@@ -222,14 +238,17 @@ mar[2] = mar_2
 par(mar = mar)
 xlim = lim_vol
 ylim = lim_sphericity
+count = 1
 for (i in index){
 
   x = data_volumes[[i]]
   y = data_sphericity[[i]]
+  color_index = which(names(data_volumes )[i] == all_atlases_to_plot)
   plot(x,y,  xlim = xlim, ylim = ylim,
-       col = colors[i], pch = pch[i], cex = 0.5,
+       col = colors[color_index], pch = pch[count], cex = 0.5,
        xlab = "", ylab = "", axes=FALSE, main = "")
   par(new = T)
+  count = count + 1
 }
 box()
 axis = par('usr')
@@ -239,7 +258,7 @@ axis(side=2,at=seq( floor( lim_sphericity[1]*10 )/10, ceiling( lim_sphericity[2]
 par(xpd=NA)
 ltr_x = par("usr")[2]
 ltr_y = par("usr")[4]
-text(ltr_x - ltr_x*1.16 , ltr_y+ ltr_y*0.24  , labels = "C", cex = 2, font = 2 )
+text(ltr_x - ltr_x*1.16 , ltr_y+ ltr_y*0.24  , labels = "C.", cex = 2, font = 2 )
 
 
 title(xlab = "Volume (log10 Voxels)", line = 2,font.lab = 1, cex.lab = 1.0)
@@ -250,7 +269,7 @@ par(new = T)
 plot(unlist(mean_volumes[index]),  unlist(mean_sphericity[index]),
      col = "black",  bg =substr(colors[index],1,7),  xlim = xlim, ylim = ylim,
      xlab = "", ylab = "", axes=FALSE, main = "", cex = 1.8,
-     pch = pch[index])
+     pch = pch[1:length(index)])
 
 
 #par(fig=c(cutoffs[1],1,cutoffs[2],1), new=T)
@@ -403,7 +422,7 @@ axis(side=2,at=seq( floor( lim_sphericity[1]*10 )/10, ceiling( lim_sphericity[2]
 par(xpd=NA)
 ltr_x = par("usr")[2]
 ltr_y = par("usr")[4]
-text(ltr_x - ltr_x*1.16 , ltr_y+ ltr_y*0.24  , labels = "D", cex = 2, font = 2 )
+text(ltr_x - ltr_x*1.16 , ltr_y+ ltr_y*0.24  , labels = "D.", cex = 2, font = 2 )
 
 
 title(xlab = "Volume (log10 Voxels)", line = 2,font.lab = 1, cex.lab = 1.0)
