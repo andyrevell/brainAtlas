@@ -29,7 +29,7 @@ from os.path import join as ospj
 sys.path.append(ospj(path, "paper001/code/tools"))
 import volumes_sphericity_surface_area as vsSA
 import pandas as pd
-
+import numpy as np
 #%% Paths and File names
 ifpath_atlases_standard = ospj( path, "data_raw/atlases/standard_atlases")
 ifpath_atlases_random = ospj( path, "data_raw/atlases/random_atlases")
@@ -104,10 +104,51 @@ for a in range(len(atlas_names_random)):
             
 #%%
 #aggregate data into single spreadsheet for plotting
+print("\n\nCalculating Means")
 
+ifpath_volumes = ospj(path, "data_processed/volumes_and_sphericity/volumes")
+ifpath_sphericity = ospj(path, "data_processed/volumes_and_sphericity/sphericity")
+ofpath_volumes_and_sphericity_means = ospj(path, "data_processed/volumes_and_sphericity_means")
 
+#%%
 
+#extracting data into lists
+atlas_names = [f for f in sorted(os.listdir(ifpath_volumes))]
 
+print("Crawling thru directories and loading volumes data")
+data_volumes = list()
+for i in range(len(atlas_names)):
+  data =  pd.read_csv(ospj(ifpath_volumes, atlas_names[i],  "{0}_volumes.csv".format(atlas_names[i])  ))
+  data = np.array(data)[:,1]
+  data = np.delete( data, 0, None)#removing first rentry because this is region label = 0, which is outside the brain
+  data_volumes.append(data)
+  
+  
+print("Crawling thru directories and loading sphericity data")
+data_sphericity = list()
+for i in range(len(atlas_names)):
+  data =  pd.read_csv(ospj(ifpath_sphericity, atlas_names[i],  "{0}_sphericity.csv".format(atlas_names[i])  ))
+  data = np.array(data)[:,1]
+  data = np.delete( data, 0, None)#removing first rentry because this is region label = 0, which is outside the brain
+  data_sphericity.append(data)
+  
+  
+#%%  
+#Calculating Means
+print("Calculating volumes and sphericity means")
+#initializing dataframe
+means = pd.DataFrame(np.zeros(shape=(len(atlas_names),2)), columns=["volume_voxels", "sphericity"], index=[atlas_names]) 
+
+#means
+for i in range(len(atlas_names)):
+    means.iloc[i,0] =  np.mean(data_volumes[i]  )
+    means.iloc[i,1] =  np.mean(data_sphericity[i]  )
+    
+#%%
+#saving
+print("Saving: {0}".format(ospj(ofpath_volumes_and_sphericity_means, "volumes_and_sphericity.csv")))
+pd.DataFrame.to_csv(means,  ospj(ofpath_volumes_and_sphericity_means, "volumes_and_sphericity.csv"), header=True, index=True)
+  
 
 
 

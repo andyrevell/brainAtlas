@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed May 20 11:09:06 2020
 
-@author: asilv
+"""
 """
 
 
@@ -13,42 +10,45 @@ from scipy.io import loadmat #fromn scipy to read mat files (structural connecti
 from scipy.stats import spearmanr, pearsonr
 import matplotlib.pyplot as plt
 
-
+#%%
   
-def SFC(structure_file_path,function_file_path,electrode_localization_by_atlas_file_path, outputfile):
+def SFC(ifname_SC, ifname_FC, ifname_electrode_localization, ofname_SFC):
     
     """
-    :param structure_file_path:
-    :param function_file_path:
-    :param electrode_localization_by_atlas_file_path:
+    :param ifname_SC:
+    :param ifname_FC:
+    :param ifname_electrode_localization:
     :return:
     """
     
     """
-    
+    from os.path import join as ospj
+    #path = "/Users/andyrevell/deepLearner/home/arevell/Documents/01_papers/paper001"
+    path = "/mnt"
     #Example:
-    structure_file_path= '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0536/connectivity_matrices/structural/RA_N0100/sub-RID0536_ses-preop3T_dwi-eddyMotionB0Corrected.nii.gz.trk.gz.RA_N0100_Perm0001.count.pass.connectivity.mat'
-    electrode_localization_by_atlas_file_path = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0536/electrode_localization/electrode_localization_by_atlas/sub-RID0536_electrode_coordinates_mni_RA_N0100_Perm0001.csv'
+    ifname_SC = ospj(path, 'data_processed/connectivity_matrices/structure/sub-RID0278/aal_res-1x1x1/sub-RID0278_ses-preop3T_dwi-eddyMotionB0Corrected.aal_res-1x1x1.count.pass.connectivity.mat')
+    ifname_electrode_localization = ospj(path, 'data_processed/electrode_localization_atlas_region/sub-RID0278/aal_res-1x1x1/sub-RID0278_electrode_coordinates_mni_aal_res-1x1x1.csv')
        
+    
+        
     #seizure 3
+    
+    #inter-ictal
+    ifname_FC = ospj(path, 'data_processed/connectivity_matrices/function/sub-RID0278/sub-RID0278_HUP138_phaseII_394423190000_394603190000_functionalConnectivity.pickle')
+    
     #pre-ictal 
-    function_file_path = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0536/connectivity_matrices/functional/eeg/sub-RID0536_HUP195_phaseII_D01_250573896890_250710930770_functionalConnectivity.pickle'
-    #ictal 
-    function_file_path = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0536/connectivity_matrices/functional/eeg/sub-RID0536_HUP195_phaseII_D01_250710930770_250847964650_functionalConnectivity.pickle'
-    #postictal 
-    function_file_path = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0536/connectivity_matrices/functional/eeg/sub-RID0536_HUP195_phaseII_D01_250847964650_251027964650_functionalConnectivity.pickle'
+    ifname_FC = ospj(path, 'data_processed/connectivity_matrices/function/sub-RID0278/sub-RID0278_HUP138_phaseII_415843190000_416023190000_functionalConnectivity.pickle')
     
-    #Output Files:
-    #pre-ictal
-    outputfile = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0536/connectivity_matrices/structure_function_correlation/RA_N0100/sub-RID0536_HUP195_phaseII_D01_250573896890_250710930770_RA_N0100_Perm0001_correlation.pickle'
     #ictal 
-    outputfile = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0536/connectivity_matrices/structure_function_correlation/RA_N0100/sub-RID0536_HUP195_phaseII_D01_250710930770_250847964650_RA_N0100_Perm0001_correlation.pickle'
-    #postictal 
-    outputfile = '/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0536/connectivity_matrices/structure_function_correlation/RA_N0100/sub-RID0536_HUP195_phaseII_D01_250847964650_251027964650_RA_N0100_Perm0001_correlation.pickle'
+    ifname_FC = ospj(path, 'data_processed/connectivity_matrices/function/sub-RID0278/sub-RID0278_HUP138_phaseII_416023190000_416112890000_functionalConnectivity.pickle')
     
+    #postictal 
+    ifname_FC = ospj(path, 'data_processed/connectivity_matrices/function/sub-RID0278/sub-RID0278_HUP138_phaseII_416112890000_416292890000_functionalConnectivity.pickle')
+    
+     
     """
     #Get functional connecitivty data in pickle file format
-    with open(function_file_path, 'rb') as f: broadband, alphatheta, beta, lowgamma, highgamma, electrode_row_and_column_names, order_of_matrices_in_pickle_file = pickle.load(f)
+    with open(ifname_FC, 'rb') as f: broadband, alphatheta, beta, lowgamma, highgamma, electrode_row_and_column_names, order_of_matrices_in_pickle_file = pickle.load(f)
     FC_list = [broadband, alphatheta, beta, lowgamma,highgamma ]
     
     # set up the dataframe of electrodes to analyze 
@@ -57,20 +57,22 @@ def SFC(structure_file_path,function_file_path,electrode_localization_by_atlas_f
     final_electrodes = final_electrodes.rename(columns={"index": "func_index"})
     
     #Get Structural Connectivity data in mat file format. Output from DSI studio
-    structural_connectivity_array = np.array(pd.DataFrame(loadmat(structure_file_path)['connectivity']))
+    structural_connectivity_array = np.array(pd.DataFrame(loadmat(ifname_SC)['connectivity']))
     
     #Get electrode localization by atlas csv file data. From get_electrode_localization.py
-    electrode_localization_by_atlas = pd.read_csv(electrode_localization_by_atlas_file_path)
+    electrode_localization_by_atlas = pd.read_csv(ifname_electrode_localization)
     
     # normalizing and log-scaling the structural matrices
     structural_connectivity_array[structural_connectivity_array == 0] = 1;
     structural_connectivity_array = np.log10(structural_connectivity_array)  # log-scaling. Converting 0s to 1 to avoid taking log of zeros
     structural_connectivity_array = structural_connectivity_array / np.max(structural_connectivity_array)  # normalization
     
-    #Only consider electrodes that are in both the localization and the pickle file
+    
+    #Only consider electrodes that are in both the localization and the functional connectivity file
     final_electrodes = final_electrodes.merge(electrode_localization_by_atlas.iloc[:,[0,4]],on='electrode_name')
     # Remove electrodes in the Functional Connectivity matrices that have a region of 0 
     final_electrodes = final_electrodes[final_electrodes['region_number']!=0]
+    
     for i in range(len(FC_list)):
         FC_list[i] = FC_list[i][final_electrodes['func_index'],:,:]
         FC_list[i] = FC_list[i][:,final_electrodes['func_index'], :]
@@ -94,7 +96,7 @@ def SFC(structure_file_path,function_file_path,electrode_localization_by_atlas_f
             index_logical = (ROIs == electrode_ROIs[r])
             index_first = np.where(index_logical)[0][0]
             index_second_to_end = np.where(index_logical)[0][1:]
-            mean = np.mean(FC_list[i][index_logical,:,:], axis=0)
+            mean = np.nanmean(FC_list[i][index_logical,:,:], axis=0)
             # Fill in with mean.
             FC_list[i][index_first,:,:] = mean
             FC_list[i][:, index_first, :] = mean
@@ -143,5 +145,49 @@ def SFC(structure_file_path,function_file_path,electrode_localization_by_atlas_f
     
     
     order_of_matrices_in_pickle_file = pd.DataFrame(["broadband", "alphatheta", "beta", "lowgamma" , "highgamma" ], columns=["Order of matrices in pickle file"])
-    with open(outputfile, 'wb') as f: pickle.dump([Corrrelation_list[0], Corrrelation_list[1], Corrrelation_list[2], Corrrelation_list[3], Corrrelation_list[4], order_of_matrices_in_pickle_file], f)
+    with open(ofname_SFC, 'wb') as f: pickle.dump([Corrrelation_list[0], Corrrelation_list[1], Corrrelation_list[2], Corrrelation_list[3], Corrrelation_list[4], order_of_matrices_in_pickle_file], f)
     
+
+
+
+
+#%%
+"""
+tmp1 = Corrrelation_list[0]
+tmp2 = Corrrelation_list[0]
+tmp3 = Corrrelation_list[0]
+
+x = range(len( tmp2))
+y = tmp2
+
+plt.scatter(x = x, y=y)
+plt.ylim(-0.1, 0.5)
+
+
+
+
+x = range(len( np.concatenate([ tmp1, tmp2])))
+y = np.concatenate([ tmp1, tmp2])
+
+plt.scatter(x = x, y=y)
+plt.ylim(-0.1, 0.5)
+
+
+
+
+
+
+
+x = range(len( np.concatenate([ tmp1, tmp2, tmp3])))
+y = np.concatenate([ tmp1, tmp2, tmp3])
+
+plt.scatter(x = x, y=y)
+plt.ylim(-0.1, 0.5)
+
+#plt.title(atlas)
+"""
+
+
+#%%
+
+

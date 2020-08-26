@@ -39,8 +39,6 @@ ofpath_connectivity = ospj( path, "data_processed/connectivity_matrices/structur
 data = pd.read_excel(ifname_EEG_times)    
 sub_ID_unique = np.unique(data.RID)
 
-
-permutations = 30# Number of random atlas permutations to use 
 #%%
 for i in range(len(sub_ID_unique)):
     #parsing data DataFrame to get iEEG information
@@ -72,19 +70,21 @@ for i in range(len(sub_ID_unique)):
             os.system(cmd)
     #random atlases: Calculating Connectivity per atlas
     for a in range(len(atlas_names_random)):
-         for p in range(1, permutations+1):
-            ifname_atlases_random = ospj(ifpath_atlases_random, atlas_names_random[a], "{0}_v{1}.nii.gz".format(atlas_names_random[a], '{:04}'.format(p))  )
-            ofname_connectivity_atlas = ospj(ofpath_connectivity_sub_ID,  os.path.splitext(os.path.splitext(atlas_names_random[a] )[0])[0])
-            if not (os.path.isdir(ofname_connectivity_atlas)): os.mkdir(ofname_connectivity_atlas)
-            ofname_connectivity = ospj(ofname_connectivity_atlas, ifname_base)
-            ofname_connectivity_long_name = "{0}.{1}.count.pass.connectivity.mat".format(ofname_connectivity,  "{0}_v{1}".format(os.path.splitext(os.path.splitext(atlas_names_random[a] )[0])[0], '{:04}'.format(p)) )
-            if (os.path.exists(ofname_connectivity_long_name)):
-                print("File exists: {0}".format(ofname_connectivity_long_name))
-            else:
-                print("\n\n\nSubject: {0}  Atlas: {1}".format(sub_ID, atlas_names_random[a]))
-                cmd = "dsi_studio --action=ana --source={0}  --tract={1} --connectivity={2} --connectivity_type=pass --connectivity_threshold=0 --output={3}".format(ifname_fib, ifname_trk , ifname_atlases_random, ofname_connectivity)
-                os.system(cmd)
-                
+        versions = [f for f in sorted(os.listdir(ospj(ifpath_atlases_random, atlas_names_random[a])))]  
+        for p in range(len(versions)):
+            
+           ifname_atlases_random = ospj(ifpath_atlases_random,atlas_names_random[a] , versions[p]  )
+           ofname_connectivity_atlas = ospj(ofpath_connectivity_sub_ID,  os.path.splitext(os.path.splitext(atlas_names_random[a] )[0])[0])
+           if not (os.path.isdir(ofname_connectivity_atlas)): os.mkdir(ofname_connectivity_atlas)
+           ofname_connectivity = ospj(ofname_connectivity_atlas, ifname_base)
+           ofname_connectivity_long_name = "{0}.{1}.count.pass.connectivity.mat".format(ofname_connectivity,  "{0}_v{1}".format(os.path.splitext(os.path.splitext(atlas_names_random[a] )[0])[0], '{:04}'.format(p+1)) )
+           if (os.path.exists(ofname_connectivity_long_name)):
+               print("File exists: {0}".format(ofname_connectivity_long_name))
+           else:
+               print("\n\n\nSubject: {0}  Atlas: {1}".format(sub_ID, atlas_names_random[a]))
+               cmd = "dsi_studio --action=ana --source={0}  --tract={1} --connectivity={2} --connectivity_type=pass --connectivity_threshold=0 --output={3}".format(ifname_fib, ifname_trk , ifname_atlases_random, ofname_connectivity)
+               os.system(cmd)
+               
 
 #%%
 

@@ -1,22 +1,45 @@
 """
 Date 2020.05.10
-Andy Revell and Alex Silva
+Andy Revell 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Purpose:
+    1. To find the region in which an x, y, z coordinate is given - usually for electrode localizetion
+
+
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Logic of code:
+    1. by atlas: Given a csv file with electrode coordinates, the atlas path, an mni template, it will output the corresponding region label in the atlas
+        1. Load atlas
+        2. load MNI template
+        3. load coorniate
+        4. Tranformation of world to voxel corrdinates system
+        5. Check to make sure coordinates are actually in the image space
+        6. Find the region label corresponding to the coordinate
+    2. inside or outside atlas: find whether or not the electrode coordinate is inside or outside the atlas
+    3. distance_from_grayMatter: finds the distance from gray matter tissue
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Input:
+    1. Electrode_coordinates_mni_path. An N x 4 csv file. N = number of electrodes. Col 1: Electrode label. Col 2-4: x, y, z coordinate
+    2. atlas_path: the full path of the atlas you want 
+    3. MNI path: the 1x1x1 MNI template
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Output:
-
+    4. An N x 5 csv file saved in specified path. 
+    N = number of electrodes. Col 1: Electrode label. Col 2-4: x, y, z coordinate. Col 5: the ROI in the atlas
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Example:
 
-
+    from os.path import join as ospj
+    path = "/mnt" Where paper/study top-level directory is stored
+    #path = "/Users/andyrevell/deepLearner/home/arevell/Documents/01_papers/paper001"
+    electrode_coordinates_mni_path= ospj(path, 'data_raw/electrode_localization/sub-RID0194/sub-RID0194_electrode_coordinates_mni.cs')
+    atlas_path=ospj(path, 'data_raw/atlases/standard_atlases/AAL600.nii.gz')
+    outputfile=ospj(path, 'data_processed/electrode_localization_atlas_region/sub-RID0194/AAL600/sub-RID0194_electrode_coordinates_mni_AAL600.csv')
+    mni_template_path =ospj(path, 'data_raw/MNI_brain_template/MNI152_T1_1mm_brain.nii.gz')
+    
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Please use this naming convention
 
@@ -30,10 +53,13 @@ import nibabel as nib
 
 def by_atlas(electrode_coordinates_mni_path, atlas_path, mni_template_path, outputfile):
     """
-    electrode_coordinates_mni_path='/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/electrode_localization/sub-RID0278_electrode_coordinates_mni.csv'
-    atlas_path='/Users/andyrevell/mount/TOOLS/atlases_and_templates/atlases/custom_atlases/random_atlases/whole_brain/RA_N1000/RA_N1000_Perm0001.nii.gz'
-    outputfile='/Users/andyrevell/mount/DATA/Human_Data/BIDS_processed/sub-RID0278/electrode_localization/electrode_localization_by_atlas/sub-RID0278_electrode_coordinates_mni_RA_N1000_Perm0001.csv'
-    mni_template_path ='/Users/andyrevell/mount/TOOLS/atlases_and_templates/templates/MNI152_T1_1mm_brain.nii.gz'
+    from os.path import join as ospj
+    path = "/mnt"
+    #path = "/Users/andyrevell/deepLearner/home/arevell/Documents/01_papers/paper001"
+    electrode_coordinates_mni_path= ospj(path, 'data_raw/electrode_localization/sub-RID0194/sub-RID0194_electrode_coordinates_mni.cs')
+    atlas_path=ospj(path, 'data_raw/atlases/standard_atlases/AAL600.nii.gz')
+    outputfile=ospj(path, 'data_processed/electrode_localization_atlas_region/sub-RID0194/AAL600/sub-RID0194_electrode_coordinates_mni_AAL600.csv')
+    mni_template_path =ospj(path, 'data_raw/MNI_brain_template/MNI152_T1_1mm_brain.nii.gz')
 
     """
     # getting imaging data

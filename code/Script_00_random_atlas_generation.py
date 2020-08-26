@@ -37,7 +37,7 @@ ifname_MNI_template = ospj( path, "data_raw/MNI_brain_template/MNI152_T1_1mm_bra
 #Number of regions contained within the random atlas. This code will loop through this list to generate a random atlas of these sizes
 number_of_regions_list = [10, 30, 50, 75, 100, 200, 300, 400, 500, 750, 1000, 2000, 5000, 10000]
 #number of random atlas permutations to make
-permutations = 30
+permutations = 5
 #%%
 
 #random atlases
