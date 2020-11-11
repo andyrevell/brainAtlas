@@ -45,16 +45,16 @@ path = "/mnt" #/mnt is the directory in the Docker or Singularity Continer where
 import sys
 import os
 from os.path import join as ospj
-sys.path.append(ospj(path, "paper001/code/tools"))
+sys.path.append(ospj(path, "brainAtlas/code/tools"))
 from functional_connectivity import get_Functional_connectivity
 import pandas as pd
 
 #%% Paths and File names
 
-inputfile_EEG_times = ospj(path, "data_raw/iEEG_times/EEG_times.xlsx")
+inputfile_EEG_times = ospj(path, "data/data_raw/iEEG_times/EEG_times.xlsx")
 
-inputpath_EEG = ospj(path, "data_raw/EEG")
-outputpath_FC = ospj(path, "data_processed/connectivity_matrices/function")
+inputpath_EEG = ospj(path, "data/data_raw/EEG")
+outputpath_FC = ospj(path, "data/data_processed/connectivity_matrices/function")
 
 
                              

@@ -46,18 +46,17 @@ path = "/mnt" #/mnt is the directory in the Docker or Singularity Continer where
 import sys
 import os
 from os.path import join as ospj
-sys.path.append(ospj(path, "paper001/code/tools"))
+sys.path.append(ospj(path, "brainAtlas/code/tools"))
 import electrode_localization
 import pandas as pd
 import numpy as np
 
 #%% Input/Output Paths and File names
-ifname_EEG_times = ospj( path, "data_raw/iEEG_times/EEG_times.xlsx")
-ifname_MNI_template = ospj( path, "data_raw/MNI_brain_template/MNI152_T1_1mm_brain.nii.gz")
-ifpath_electrode_localization = ospj( path, "data_raw/electrode_localization")
-ifpath_atlases_standard = ospj( path, "data_raw/atlases/standard_atlases")
-ifpath_atlases_random = ospj( path, "data_raw/atlases/random_atlases")
-ofpath_electrode_localization = ospj( path, "data_processed/electrode_localization_atlas_region")
+ifname_EEG_times = ospj( path, "data/data_raw/iEEG_times/EEG_times.xlsx")
+ifpath_electrode_localization = ospj( path, "data/data_raw/electrode_localization")
+ifpath_atlases_standard = ospj( path, "data/data_raw/atlases/standard_atlases")
+ifpath_atlases_random = ospj( path, "data/data_raw/atlases/random_atlases")
+ofpath_electrode_localization = ospj( path, "data/data_processed/electrode_localization_atlas_region")
 
 #%% Load Study Meta Data
 data = pd.read_excel(ifname_EEG_times)    
@@ -93,7 +92,7 @@ for i in range(len(sub_IDs_unique)):
         ofname_electrode_localization = "{0}_{1}.csv".format( os.path.splitext(ifname_electrode_localization_sub_ID)[0],os.path.splitext(os.path.splitext(atlas_names_standard[a] )[0])[0])
         ofname_electrode_localization_fullpath = ospj(ofpath_electrode_localization_sub_ID_atlas, ofname_electrode_localization)
         print("Subject: {0}  Atlas: {1}".format(sub_ID, atlas_names_standard[a]))
-        electrode_localization.by_atlas(ifname_electrode_localization_sub_ID_fullpath, ifname_atlases_standard, ifname_MNI_template, ofname_electrode_localization_fullpath)
+        electrode_localization.by_atlas(ifname_electrode_localization_sub_ID_fullpath, ifname_atlases_standard, ofname_electrode_localization_fullpath)
     #random atlases: getting electrode localization by region
     for a in range(len(atlas_names_random)):
         versions = [f for f in sorted(os.listdir(ospj(ifpath_atlases_random, atlas_names_random[a])))]  
@@ -105,7 +104,7 @@ for i in range(len(sub_IDs_unique)):
            ofname_electrode_localization = "{0}_{1}.csv".format( os.path.splitext(ifname_electrode_localization_sub_ID)[0],os.path.splitext(os.path.splitext("{0}_v{1}.nii.gz".format(atlas_names_random[a], '{:04}'.format(p+1)))[0])[0])
            ofname_electrode_localization_fullpath = ospj(ofpath_electrode_localization_sub_ID_atlas, ofname_electrode_localization)
            print("Subject: {0}  Atlas: {1}".format(sub_ID,  "{0}_v{1}.nii.gz".format(atlas_names_random[a], '{:04}'.format(p+1))  ))
-           electrode_localization.by_atlas(ifname_electrode_localization_sub_ID_fullpath, ifname_atlases_random, ifname_MNI_template, ofname_electrode_localization_fullpath)
+           electrode_localization.by_atlas(ifname_electrode_localization_sub_ID_fullpath, ifname_atlases_random, ofname_electrode_localization_fullpath)
       
 
    

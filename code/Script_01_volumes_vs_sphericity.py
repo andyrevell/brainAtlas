@@ -26,15 +26,15 @@ path = "/mnt" #/mnt is the directory in the Docker or Singularity Continer where
 import sys
 import os
 from os.path import join as ospj
-sys.path.append(ospj(path, "paper001/code/tools"))
+sys.path.append(ospj(path, "brainAtlas/code/tools"))
 import volumes_sphericity_surface_area as vsSA
 import pandas as pd
 import numpy as np
 #%% Paths and File names
-ifpath_atlases_standard = ospj( path, "data_raw/atlases/standard_atlases")
-ifpath_atlases_random = ospj( path, "data_raw/atlases/random_atlases")
-ofpath_volumes = ospj( path, "data_processed/volumes_and_sphericity/volumes")
-ofpath_sphericity = ospj( path, "data_processed/volumes_and_sphericity/sphericity")
+ifpath_atlases_standard = ospj( path, "data/data_raw/atlases/standard_atlases")
+ifpath_atlases_random = ospj( path, "data/data_raw/atlases/random_atlases")
+ofpath_volumes = ospj( path, "data/data_processed/volumes_and_sphericity/volumes")
+ofpath_sphericity = ospj( path, "data/data_processed/volumes_and_sphericity/sphericity")
 
 #%% Paramters
 #number of random atlas permutations to run on
@@ -106,9 +106,9 @@ for a in range(len(atlas_names_random)):
 #aggregate data into single spreadsheet for plotting
 print("\n\nCalculating Means")
 
-ifpath_volumes = ospj(path, "data_processed/volumes_and_sphericity/volumes")
-ifpath_sphericity = ospj(path, "data_processed/volumes_and_sphericity/sphericity")
-ofpath_volumes_and_sphericity_means = ospj(path, "data_processed/volumes_and_sphericity_means")
+ifpath_volumes = ospj(path, "data/data_processed/volumes_and_sphericity/volumes")
+ifpath_sphericity = ospj(path, "data/data_processed/volumes_and_sphericity/sphericity")
+ofpath_volumes_and_sphericity_means = ospj(path, "data/data_processed/volumes_and_sphericity_means")
 
 #%%
 

@@ -25,12 +25,12 @@ path = "/mnt" #/mnt is the directory in the Docker or Singularity Continer where
 import sys
 import os
 from os.path import join as ospj
-sys.path.append(ospj(path, "paper001/code/tools"))
+sys.path.append(ospj(path, "brainAtlas/code/tools"))
 import random_atlas_generation as RAG
 
 #%% Paths and File names
-ofpath_atlases_random = ospj( path, "data_raw/atlases/random_atlases")
-ifname_MNI_template = ospj( path, "data_raw/MNI_brain_template/MNI152_T1_1mm_brain.nii.gz")
+ofpath_atlases_random = ospj( path, "data/data_raw/atlases/random_atlases")
+ifname_MNI_template = ospj( path, "data/data_raw/MNI_brain_template/MNI152_T1_1mm_brain.nii.gz")
 
 #%% Paramters
 

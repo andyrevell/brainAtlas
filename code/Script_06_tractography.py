@@ -50,9 +50,9 @@ import pandas as pd
 import numpy as np
 #%% Input/Output Paths and File names
 
-inputfile_EEG_times = ospj(path, "data_raw/iEEG_times/EEG_times.xlsx")
-inputpath_dwi =  ospj(path, "data_processed/imaging")
-outputpath_tractography = ospj(path, "data_processed/tractography")
+inputfile_EEG_times = ospj(path, "data/data_raw/iEEG_times/EEG_times.xlsx")
+inputpath_dwi =  ospj(path, "data/data_processed/imaging")
+outputpath_tractography = ospj(path, "data/data_processed/tractography")
                              
 #%% Load Study Meta Data and parameters
 data = pd.read_excel(inputfile_EEG_times)    

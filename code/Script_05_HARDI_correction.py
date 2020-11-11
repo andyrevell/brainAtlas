@@ -26,13 +26,13 @@ path = "/mnt" #/mnt is the directory in the Docker or Singularity Continer where
 import sys
 import os
 from os.path import join as ospj
-sys.path.append(ospj(path, "paper001/code/tools"))
+sys.path.append(ospj(path, "brainAtlas/code/tools"))
 import pandas as pd
 #%% Paths and File names
 
-inputfile_EEG_times = ospj( path, "data_raw/iEEG_times/EEG_times.xlsx")
-inputpath_dwi =  "/mnt/data_processed/imaging"
-outputpath_tractography = "/mnt/data_processed/tractography"
+inputfile_EEG_times = ospj( path, "data/data_raw/iEEG_times/EEG_times.xlsx")
+inputpath_dwi =  "/mnt/data/data_processed/imaging"
+outputpath_tractography = "/mnt/data/data_processed/tractography"
 
 #may not be applicable if DSI Studio is already on your $PATH environment
 #dsi_studio_path = "." # On a Mac: "/Applications/dsi_studio.app/Contents/MacOS/"

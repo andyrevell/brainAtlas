@@ -24,19 +24,19 @@ path = "/mnt" #/mnt is the directory in the Docker or Singularity Continer where
 import sys
 import os
 from os.path import join as ospj
-sys.path.append(ospj(path, "paper001/code/tools"))
+sys.path.append(ospj(path, "brainAtlas/code/tools"))
 import pandas as pd
 import numpy as np
 import network_measures
 
 #%% Paths and File names
 
-ifname_EEG_times = ospj(path, "data_raw/iEEG_times/EEG_times.xlsx")
-ifpath_tractography = ospj(path, "data_processed/tractography")
-ifpath_atlases_standard = ospj( path, "data_raw/atlases/standard_atlases")
-ifpath_atlases_random = ospj( path, "data_raw/atlases/random_atlases")
-ifpath_SC = ospj( path, "data_processed/connectivity_matrices/structure")
-ofpath_network_measures = ospj( path, "data_processed/network_measures")
+ifname_EEG_times = ospj(path, "data/data_raw/iEEG_times/EEG_times.xlsx")
+ifpath_tractography = ospj(path, "data/data_processed/tractography")
+ifpath_atlases_standard = ospj( path, "data/data_raw/atlases/standard_atlases")
+ifpath_atlases_random = ospj( path, "data/data_raw/atlases/random_atlases")
+ifpath_SC = ospj( path, "data/data_processed/connectivity_matrices/structure/pass")
+ofpath_network_measures = ospj( path, "data/data_processed/network_measures")
 
 
 #%% Paramters

@@ -25,7 +25,7 @@ path = "/Users/andyrevell/deepLearner/home/arevell/Documents/01_papers/paper001"
 import sys
 import os
 from os.path import join as ospj
-sys.path.append(ospj(path, "paper001/code/tools"))
+sys.path.append(ospj(path, "brainAtlas/code/tools"))
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -35,13 +35,13 @@ import scipy.stats
 
 #%% Paths and File names
 
-ifname_EEG_times = ospj(path, "data_raw/iEEG_times/EEG_times.xlsx")
-ifpath_atlases_standard = ospj( path, "data_raw/atlases/standard_atlases")
-ifpath_atlases_random = ospj( path, "data_raw/atlases/random_atlases")
-ofpath_SFC_processed = ospj( path, "data_processed/structure_function_correlation_processed")
+ifname_EEG_times = ospj(path, "data/data_raw/iEEG_times/EEG_times.xlsx")
+ifpath_atlases_standard = ospj( path, "data/data_raw/atlases/standard_atlases")
+ifpath_atlases_random = ospj( path, "data/data_raw/atlases/random_atlases")
+ofpath_SFC_processed = ospj( path, "data/data_processed/structure_function_correlation_processed")
 ofpath_SFC_population_averages = ospj( ofpath_SFC_processed, "SFC_population_averages")
 
-ofpath_figure = ospj( path,  "paper001", "figures", "average_all_seizures")
+ofpath_figure = ospj( path,  "brainAtlas", "figures", "average_all_seizures")
 
 
 #%%Load Data

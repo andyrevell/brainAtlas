@@ -28,19 +28,19 @@ import os
 from os.path import join as ospj
 import pandas as pd
 import numpy as np
-sys.path.append(ospj(path, "paper001/code/tools"))
+sys.path.append(ospj(path, "brainAtlas/code/tools"))
 import structure_function_correlation
 
 #%% Paths and File names
 
-ifname_EEG_times = ospj(path, "data_raw/iEEG_times/EEG_times.xlsx")
-ifpath_atlases_standard = ospj( path, "data_raw/atlases/standard_atlases")
-ifpath_atlases_random = ospj( path, "data_raw/atlases/random_atlases")
-ifpath_SC = ospj( path, "data_processed/connectivity_matrices/structure")
-ifpath_FC = ospj( path, "data_processed/connectivity_matrices/function")     
-ifpath_electrode_localization = ospj( path, "data_processed/electrode_localization_atlas_region")        
+ifname_EEG_times = ospj(path, "data/data_raw/iEEG_times/EEG_times.xlsx")
+ifpath_atlases_standard = ospj( path, "data/data_raw/atlases/standard_atlases")
+ifpath_atlases_random = ospj( path, "data/data_raw/atlases/random_atlases")
+ifpath_SC = ospj( path, "data/data_processed/connectivity_matrices/structure/pass")
+ifpath_FC = ospj( path, "data/data_processed/connectivity_matrices/function")     
+ifpath_electrode_localization = ospj( path, "data/data_processed/electrode_localization_atlas_region")        
 
-ofpath_SFC = ospj( path, "data_processed/structure_function_correlation") 
+ofpath_SFC = ospj( path, "data/data_processed/structure_function_correlation") 
 #%%Load Data
 data = pd.read_excel(ifname_EEG_times)    
 sub_ID_unique = np.unique(data.RID)
@@ -84,7 +84,9 @@ for i in range(len(data)):
             #Getting Structure
             #################
             base_name = "sub-{0}_ses-preop3T_dwi-eddyMotionB0Corrected.{1}.count.pass.connectivity.mat".format( sub_ID, atlas_name )
+            base_name2 = "sub-{0}_ses-preop3T_dwi-eddyMotionB0Corrected.{1}.count.pass.connectogram.txt".format( sub_ID, atlas_name )
             ifname_SC =  ospj( ifpath_SC_sub_ID_atlas, base_name) 
+            ifname_SCtxt = ospj( ifpath_SC_sub_ID_atlas, base_name2) 
             if not (os.path.exists(ifname_SC)):#check if file exists
                 print("File does not exist: {0}".format(ifname_SC))
             else:
@@ -99,7 +101,7 @@ for i in range(len(data)):
                     ofname_SFC = "{0}/sub-{1}_{2}_{3}_{4}_{5}_SFC.pickle".format(ofpath_SFC_sub_ID_atlas, sub_ID, iEEG_filename, start_time_usec, stop_time_usec,atlas_name )
                     if not (os.path.exists(ofname_SFC)):#check if file exists
                         print("Calculating SFC: {0}".format(ofname_SFC))
-                        structure_function_correlation.SFC(ifname_SC,ifname_FC,ifname_electrode_localization, ofname_SFC)
+                        structure_function_correlation.SFC(ifname_SC,ifname_SCtxt, ifname_FC,ifname_electrode_localization, ofname_SFC)
                     else:
                         print("File exists: {0}".format(ofname_SFC))
         #Random Atlases

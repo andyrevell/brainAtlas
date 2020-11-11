@@ -9,10 +9,10 @@ import pandas as pd
 from scipy.io import loadmat #fromn scipy to read mat files (structural connectivity)
 from scipy.stats import spearmanr, pearsonr
 import matplotlib.pyplot as plt
-
+import re #regular expression
 #%%
   
-def SFC(ifname_SC, ifname_FC, ifname_electrode_localization, ofname_SFC):
+def SFC(ifname_SC, ifname_SCtxt, ifname_FC, ifname_electrode_localization, ofname_SFC):
     
     """
     :param ifname_SC:
@@ -59,6 +59,14 @@ def SFC(ifname_SC, ifname_FC, ifname_electrode_localization, ofname_SFC):
     #Get Structural Connectivity data in mat file format. Output from DSI studio
     structural_connectivity_array = np.array(pd.DataFrame(loadmat(ifname_SC)['connectivity']))
     
+    structural_connectivity_names = pd.read_csv(ifname_SCtxt, sep="\t", header=1,index_col=1)
+    structural_connectivity_names = structural_connectivity_names.columns[1:-1]
+    SC_region_names = []
+    for r in range(len(structural_connectivity_names)):
+        SC_region_names.append(re.sub('region_', '', structural_connectivity_names[r])    ) 
+    SC_region_names = np.array(SC_region_names)
+    SC_region_names = SC_region_names.astype('int') 
+    
     #Get electrode localization by atlas csv file data. From get_electrode_localization.py
     electrode_localization_by_atlas = pd.read_csv(ifname_electrode_localization)
     
@@ -85,7 +93,11 @@ def SFC(ifname_SC, ifname_FC, ifname_electrode_localization, ofname_SFC):
     # Remove structural ROIs not in electrode_localization ROIs
     electrode_ROIs = np.unique(np.array(final_electrodes.iloc[:,2]))
     electrode_ROIs = electrode_ROIs[~(electrode_ROIs == 0)] #remove region 0
-    structural_index = electrode_ROIs - 1 #subtract 1 because of python's zero indexing
+   
+    structural_index = []
+    for r in range(len(electrode_ROIs)):
+        structural_index.append(  np.where(electrode_ROIs[r] ==SC_region_names  )[0][0]   )
+    structural_index = np.array(structural_index)
     structural_connectivity_array = structural_connectivity_array[structural_index,:]
     structural_connectivity_array = structural_connectivity_array[:,structural_index]
     
@@ -143,7 +155,7 @@ def SFC(ifname_SC, ifname_FC, ifname_electrode_localization, ofname_SFC):
     
     
     
-    
+
     order_of_matrices_in_pickle_file = pd.DataFrame(["broadband", "alphatheta", "beta", "lowgamma" , "highgamma" ], columns=["Order of matrices in pickle file"])
     with open(ofname_SFC, 'wb') as f: pickle.dump([Corrrelation_list[0], Corrrelation_list[1], Corrrelation_list[2], Corrrelation_list[3], Corrrelation_list[4], order_of_matrices_in_pickle_file], f)
     

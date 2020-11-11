@@ -25,7 +25,7 @@ path = "/mnt" #/mnt is the directory in the Docker or Singularity Continer where
 import sys
 import os
 from os.path import join as ospj
-sys.path.append(ospj(path, "paper001/code/tools"))
+sys.path.append(ospj(path, "brainAtlas/code/tools"))
 import structure_function_correlation_post_processing
 import pandas as pd
 import numpy as np
@@ -33,11 +33,11 @@ import pickle
 
 #%% Paths and File names
 
-ifname_EEG_times = ospj(path, "data_raw/iEEG_times/EEG_times.xlsx")
-ifpath_SFC = ospj( path, "data_processed/structure_function_correlation") 
-ifpath_atlases_standard = ospj( path, "data_raw/atlases/standard_atlases")
-ifpath_atlases_random = ospj( path, "data_raw/atlases/random_atlases")
-ofpath_SFC_processed = ospj( path, "data_processed/structure_function_correlation_processed")
+ifname_EEG_times = ospj(path, "data/data_raw/iEEG_times/EEG_times.xlsx")
+ifpath_SFC = ospj( path, "data/data_processed/structure_function_correlation") 
+ifpath_atlases_standard = ospj( path, "data/data_raw/atlases/standard_atlases")
+ifpath_atlases_random = ospj( path, "data/data_raw/atlases/random_atlases")
+ofpath_SFC_processed = ospj( path, "data/data_processed/structure_function_correlation_processed")
 ofpath_SFC_aggregate = ospj( ofpath_SFC_processed, "SFC_aggregated_by_seizure")
 ofpath_SFC_averages_by_atlas = ospj( ofpath_SFC_processed, "SFC_averages_by_atlas")
 ofpath_SFC_interpolation = ospj( ofpath_SFC_processed, "SFC_interpolation")

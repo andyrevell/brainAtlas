@@ -29,11 +29,11 @@ import pandas as pd
 import numpy as np
 #%% Paths and File names
 
-ifname_EEG_times = ospj(path, "data_raw/iEEG_times/EEG_times.xlsx")
-ifpath_tractography = ospj(path, "data_processed/tractography")
-ifpath_atlases_standard = ospj( path, "data_raw/atlases/standard_atlases")
-ifpath_atlases_random = ospj( path, "data_raw/atlases/random_atlases")
-ofpath_connectivity = ospj( path, "data_processed/connectivity_matrices/structure")
+ifname_EEG_times = ospj(path, "data/data_raw/iEEG_times/EEG_times.xlsx")
+ifpath_tractography = ospj(path, "data/data_processed/tractography")
+ifpath_atlases_standard = ospj( path, "data/data_raw/atlases/standard_atlases")
+ifpath_atlases_random = ospj( path, "data/data_raw/atlases/random_atlases")
+ofpath_connectivity = ospj( path, "data/data_processed/connectivity_matrices/structure/end")
                              
 #%%Load Data
 data = pd.read_excel(ifname_EEG_times)    
@@ -66,7 +66,7 @@ for i in range(len(sub_ID_unique)):
             print("File exists: {0}".format(ofname_connectivity_long_name))
         else:
             print("\n\n\nSubject: {0}  Atlas: {1}".format(sub_ID, atlas_names_standard[a]))
-            cmd = "dsi_studio --action=ana --source={0}  --tract={1} --connectivity={2} --connectivity_type=pass --connectivity_threshold=0 --output={3}".format(ifname_fib, ifname_trk , ifname_atlases_standard, ofname_connectivity)
+            cmd = "dsi_studio --action=ana --source={0}  --tract={1} --connectivity={2} --connectivity_type=end --connectivity_threshold=0 --output={3}".format(ifname_fib, ifname_trk , ifname_atlases_standard, ofname_connectivity)
             os.system(cmd)
     #random atlases: Calculating Connectivity per atlas
     for a in range(len(atlas_names_random)):
@@ -82,7 +82,7 @@ for i in range(len(sub_ID_unique)):
                print("File exists: {0}".format(ofname_connectivity_long_name))
            else:
                print("\n\n\nSubject: {0}  Atlas: {1}".format(sub_ID, atlas_names_random[a]))
-               cmd = "dsi_studio --action=ana --source={0}  --tract={1} --connectivity={2} --connectivity_type=pass --connectivity_threshold=0 --output={3}".format(ifname_fib, ifname_trk , ifname_atlases_random, ofname_connectivity)
+               cmd = "dsi_studio --action=ana --source={0}  --tract={1} --connectivity={2} --connectivity_type=end --connectivity_threshold=0 --output={3}".format(ifname_fib, ifname_trk , ifname_atlases_random, ofname_connectivity)
                os.system(cmd)
                
 
